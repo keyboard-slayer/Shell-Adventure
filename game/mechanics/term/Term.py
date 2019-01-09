@@ -5,7 +5,10 @@ import os
 import time
 import pygame
 
-from typing import Tuple
+from typing import (
+    Tuple,
+    Dict
+)
 from string import ascii_lowercase
 from game.mechanics.term.executor import execute
 
@@ -37,7 +40,27 @@ class Term:
         self.prompt = f"{self.env['USER']}@{self.env['HOST']} {path}: $"
         self.tick = time.time()
 
+    def add_to_display(self, output: str):
+        self.visualLine.append(f">{output}")
+
+    def clear(self):
+        self.visualLine = []
+
+    def getenv(self) -> Dict[str, str]:
+        return self.env
+
     def draw(self):
+        for lineIndex, line in enumerate(self.visualLine):
+            toshow = f"{self.prompt} {line}" if line[0] != '>' else line[1:]
+            self.surface.blit(
+                self.mono.render(
+                    toshow,
+                    True,
+                    (255, 255, 255)
+                ),
+                (0, lineIndex * 22)
+            )
+
         self.surface.blit(
             self.mono.render(
                 f"{self.prompt} {self.currentTyping}",
@@ -49,13 +72,14 @@ class Term:
 
     def keydown(self, keycode: int):
         keyName = pygame.key.name(keycode)
+        print(keyName)
 
         if keyName == "backspace":
             self.currentTyping = self.currentTyping[:-1]
 
         if keyName == "return":
-            execute(self.currentTyping)
             self.visualLine.append(self.currentTyping)
+            execute(self.currentTyping, self)
             self.currentTyping = ""
 
         if keyName == "space":
@@ -66,7 +90,10 @@ class Term:
             self.visualLine.append("^C")
             self.currentTyping = ""
 
-        elif keyName in ascii_lowercase:
+        elif keyName in ascii_lowercase and pygame.key.get_mods() & pygame.KMOD_SHIFT:
+            self.currentTyping += keyName.upper()
+
+        elif keyName in ascii_lowercase or keyName in ['&']:
             self.currentTyping += keyName
 
     def update(self):
