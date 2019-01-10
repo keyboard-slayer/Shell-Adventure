@@ -10,7 +10,10 @@ from typing import (
     Dict
 )
 from string import ascii_lowercase
+
 from game.mechanics.term.executor import execute
+from game.mechanics.term.History import History
+
 
 
 class Term:
@@ -18,6 +21,7 @@ class Term:
         self.surface = pygame.Surface(size)
         self.mono = pygame.font.Font("font/monospace.ttf", 22)
         self.visualLine = []
+        self.sessionHistory = []
         self.currentTyping = ""
 
         if not os.path.isdir(os.path.join(os.environ["HOME"], ".shelladv")):
@@ -74,6 +78,15 @@ class Term:
         keyName = pygame.key.name(keycode)
         print(keyName)
 
+        if keyName == "[.]" or keyName == ';'\
+            and pygame.key.get_mods() & pygame.KMOD_SHIFT:
+                self.currentTyping += '.'
+
+        if keyName == "[/]" or keyName == ':'\
+            and pygame.key.get_mods() & pygame.KMOD_SHIFT:
+                self.currentTyping += '/'
+
+
         if keyName == "backspace":
             self.currentTyping = self.currentTyping[:-1]
 
@@ -86,8 +99,7 @@ class Term:
             self.currentTyping += ' '
 
         if keyName == "c" and pygame.key.get_mods() & pygame.KMOD_CTRL:
-            self.visualLine.append(self.currentTyping)
-            self.visualLine.append("^C")
+            self.visualLine.append(self.currentTyping+"^C")
             self.currentTyping = ""
 
         elif keyName in ascii_lowercase and pygame.key.get_mods() & pygame.KMOD_SHIFT:
@@ -98,7 +110,6 @@ class Term:
 
     def update(self):
         self.surface.fill((0, 0, 0))
-
         if 0.3 < time.time() - self.tick < 0.8:
             pygame.draw.rect(
                 self.surface,
@@ -116,9 +127,3 @@ class Term:
     def get_surface(self) -> pygame.Surface:
         self.update()
         return self.surface
-
-
-
-
-
-

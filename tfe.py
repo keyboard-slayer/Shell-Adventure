@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import os
 import sys
 
@@ -5,14 +8,14 @@ import sys
 def launch(file: str):
     os.system(
             "/bin/bash -c 'chmod +x venv/bin/* && source venv/bin/activate && cd game/ && PYTHONPATH=\"{}\"" \
-            " python -O {}'" .format(os.path.abspath("./"), os.path.abspath(f"./test/{file}")))
+            " python3 -O {}'" .format(os.path.abspath("./"), os.path.abspath(f"./test/{file}")))
 
 
 if __name__ == "__main__":
     header = "\n".join([files for files in os.listdir("./test/") \
-                        if files != "__init__.py"])
+                        if files != "__init__.py" and files.split('.')[-1] == "py"])
 
-    if sys.argv[1] == "--dev":
+    if len(sys.argv) == 2 and sys.argv[1] == "--dev":
         print(f"""
 *******************
 *Fichier de tests *
@@ -20,3 +23,6 @@ if __name__ == "__main__":
 {header}""")
         filename = input("Tappez le nom du fichier: ")
         launch(filename)
+
+    elif len(sys.argv) == 3 and sys.argv[1] == "--dev":
+        launch(sys.argv[2])
