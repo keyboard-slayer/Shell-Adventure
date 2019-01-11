@@ -26,8 +26,24 @@ class Term:
 
         if not os.path.isdir(os.path.join(os.environ["HOME"], ".shelladv")):
             os.mkdir(os.path.join(os.environ["HOME"], ".shelladv"))
-        if not os.path.isdir(os.path.join(os.path.join(os.environ["HOME"], ".shelladv"), username)):
-            os.mkdir(os.path.join(os.path.join(os.environ["HOME"], ".shelladv"), username))
+
+        if not os.path.isdir(
+            os.path.join(
+                os.path.join(os.environ["HOME"], ".shelladv"),
+            username)
+        ):
+
+            os.mkdir(
+                os.path.join(
+                    os.path.join(os.environ["HOME"], ".shelladv"),
+                username)
+            )
+
+        self.history = History(
+            os.path.join(
+                os.path.join(os.environ["HOME"], ".shelladv"),
+            username)
+        )
 
         self.env = {
             "HOME": os.path.join(os.path.join(os.environ["HOME"], ".shelladv"), username),
@@ -53,6 +69,9 @@ class Term:
     def getenv(self) -> Dict[str, str]:
         return self.env
 
+    def setenv(self, var, value):
+        self.env[var] = value
+
     def draw(self):
         for lineIndex, line in enumerate(self.visualLine):
             toshow = f"{self.prompt} {line}" if line[0] != '>' else line[1:]
@@ -76,7 +95,7 @@ class Term:
 
     def keydown(self, keycode: int):
         keyName = pygame.key.name(keycode)
-        print(keyName)
+        # ~ print(keyName)
 
         if keyName == "[.]" or keyName == ';'\
             and pygame.key.get_mods() & pygame.KMOD_SHIFT:
@@ -86,12 +105,19 @@ class Term:
             and pygame.key.get_mods() & pygame.KMOD_SHIFT:
                 self.currentTyping += '/'
 
+        if keyName == "-" and pygame.key.get_mods() & pygame.KMOD_SHIFT:
+            self.currentTyping += '_'
+
+
+        elif keyName == "[-]" or keyName == "-":
+            self.currentTyping += '-'
 
         if keyName == "backspace":
             self.currentTyping = self.currentTyping[:-1]
 
         if keyName == "return":
             self.visualLine.append(self.currentTyping)
+            # self.history.append()
             execute(self.currentTyping, self)
             self.currentTyping = ""
 
