@@ -21,8 +21,11 @@ class Term:
         self.surface = pygame.Surface(size)
         self.mono = pygame.font.Font("font/monospace.ttf", 22)
         self.visualLine = []
+        self.lineRect = None
+        self.blinkRect = None
         self.sessionHistory = []
         self.currentTyping = ""
+        self.blinkX = 0
 
         if not os.path.isdir(os.path.join(os.environ["HOME"], ".shelladv")):
             os.mkdir(os.path.join(os.environ["HOME"], ".shelladv"))
@@ -84,7 +87,7 @@ class Term:
                 (0, lineIndex * 22)
             )
 
-        self.surface.blit(
+        self.lineRect = self.surface.blit(
             self.mono.render(
                 f"{self.prompt} {self.currentTyping}",
                 True,
@@ -114,12 +117,14 @@ class Term:
 
         if keyName == "backspace":
             self.currentTyping = self.currentTyping[:-1]
+            self.blinkX = 0
 
         if keyName == "return":
             self.visualLine.append(self.currentTyping)
-            # self.history.append()
+            self.history.append(self.currentTyping)
             execute(self.currentTyping, self)
             self.currentTyping = ""
+            self.blinkX = 0
 
         if keyName == "space":
             self.currentTyping += ' '
@@ -134,21 +139,29 @@ class Term:
         elif keyName in ascii_lowercase or keyName in ['&']:
             self.currentTyping += keyName
 
+    def drawBlink(self):
+        self.blinkRect = pygame.draw.rect(
+            self.surface,
+            (255, 255, 255),
+            (self.blinkX,
+                2 + len(self.visualLine) * 22,
+                12,
+                20)
+        )
+
     def update(self):
         self.surface.fill((0, 0, 0))
+        self.draw()
         if 0.3 < time.time() - self.tick < 0.8:
-            pygame.draw.rect(
-                self.surface,
-                (255, 255, 255),
-                ((len(self.prompt) + len(self.currentTyping)) * 11.5,
-                    2 + len(self.visualLine) * 22,
-                    12,
-                    20)
-            )
+            self.drawBlink()
+            while self.blinkRect is None or \
+                self.lineRect.colliderect(self.blinkRect):
+
+                self.drawBlink()
+                self.blinkX += 1
+                done = True
         if time.time() - self.tick > 0.8:
             self.tick = time.time()
-
-        self.draw()
 
     def get_surface(self) -> pygame.Surface:
         self.update()
