@@ -16,6 +16,7 @@ def execute(cmd: str, term):
         if command == "exit":
             exit()
             return 0
+
         elif command == "clear":
             term.clear()
             return 0
@@ -37,7 +38,7 @@ def execute(cmd: str, term):
     """
             for line in art.split('\n'):
                 term.add_to_display(line)
-                return 0
+            return 0
 
         else:
             cmdWArg = command.split(' ')
@@ -84,6 +85,7 @@ def execute(cmd: str, term):
                     term.add_to_display(f"{cmdWArg[0]}: commande introuvable")
                     return 1
 
-                for line in output.split('\n')[:-1]:
+
+                for line in output.split('\n')[:-1]: 
                     term.add_to_display(line)
-                    return 0
+                return 0
