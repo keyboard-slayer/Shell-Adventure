@@ -100,6 +100,19 @@ class Term:
         keyName = pygame.key.name(keycode)
         # ~ print(keyName)
 
+        if keyName == '\'':
+            self.currentTyping += '\''
+
+        if keyName == "<" \
+            and pygame.key.get_mods() & pygame.KMOD_SHIFT:
+                self.currentTyping += '>'
+
+        elif keyName == "<":
+            self.currentTyping += '<'
+
+        if keyName == "\"":
+            self.currentTyping += "\""
+
         if keyName == "[.]" or keyName == ';'\
             and pygame.key.get_mods() & pygame.KMOD_SHIFT:
                 self.currentTyping += '.'

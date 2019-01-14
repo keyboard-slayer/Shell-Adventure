@@ -8,7 +8,8 @@ import subprocess
 
 def execute(cmd: str, term):
     commands = cmd.split(' && ')
-    os.chdir(term.getenv()["HOME"])
+    homepath = term.getenv()["HOME"]
+    os.chdir(homepath)
     for command in commands:
         if not command.replace(' ', ''):
             return 0
@@ -16,6 +17,11 @@ def execute(cmd: str, term):
         if command == "exit":
             exit()
             return 0
+
+        elif command == "history":
+            with open(os.path.join(homepath, '.bash_history'), 'r') as history:
+                for index, line in enumerate(history.readlines()):
+                    term.add_to_display(f"{index+1: 4}  {line[:-1]}")
 
         elif command == "clear":
             term.clear()
