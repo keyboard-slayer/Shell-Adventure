@@ -1,0 +1,13 @@
+;
+;   TEST
+;
+
+BEGIN
+EXEC "test.sh"
+SAY "Bonjour utilisateur !"
+OBJECTIF "Créer un fichier X"
+WAIT FILE "X" THEN SAY "Bien joué"
+OBJECTIF "Créer un dossier Y"
+WAIT DIR "Y" THEN SAY "Tu es le meillieur"
+END 
+

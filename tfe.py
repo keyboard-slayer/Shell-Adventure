@@ -10,11 +10,11 @@ from game.game import launchGame
 
 def launch(file: str):
     os.system(
-            "/bin/bash -c 'chmod +x venv/bin/* && source venv/bin/activate && cd game/ && PYTHONPATH=\"{}\"" \
-            " python3 -O {}'" .format(os.path.abspath("./"), os.path.abspath(f"./test/{file}")))
+            "cd game/ && PYTHONPATH=\"{}\"" \
+            " python3 -O {}" .format(os.path.abspath("./"), os.path.abspath(f"./test/{file}")))
 
 
-def devMenu(argv: List[str]):
+def devMenu():
     print(f"""
 *******************
 *Fichier de tests *
@@ -23,15 +23,13 @@ def devMenu(argv: List[str]):
     filename = input("Tappez le nom du fichier: ")
     launch(filename)
 
-    if len(argv) == 2:
-        launch(argv[1])
-
-
 if __name__ == "__main__":
     header = "\n".join([files for files in os.listdir("./test/") \
                         if files != "__init__.py" and files.split('.')[-1] == "py"])
 
     if len(sys.argv) == 2 and sys.argv[1] == "--dev":
-        devMenu(sys.argv[1:])
-    
-    launchGame()
+        devMenu()
+    elif len(sys.argv) == 3 and sys.argv[1] == "--dev":
+        launch(sys.argv[2])
+    else:
+        launchGame()
