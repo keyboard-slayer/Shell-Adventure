@@ -11,7 +11,7 @@ from typing import (
 )
 from string import ascii_lowercase
 
-from game.mechanics.term.executor import execute
+from game.mechanics.term.executor import execute_and_out
 from game.mechanics.term.History import History
 
 
@@ -48,23 +48,28 @@ class Term:
             username)
         )
 
+
         self.env = {
             "HOME": os.path.join(os.path.join(os.environ["HOME"], ".shelladv"), username),
             "PWD": os.path.join(os.path.join(os.environ["HOME"], ".shelladv"), username),
             "USER": username,
             "HOST": host
         }
+        
+        os.chdir(self.env["HOME"])
+        self.tick = time.time()
+        self.updatePrompt()
 
+    def updatePrompt(self):
         if self.env["PWD"][:len(self.env["HOME"])] == self.env["HOME"]:
             path = f"~{self.env['PWD'].split(self.env['HOME'])[1]}"
         else:
             path = self.env["PWD"]
 
         self.prompt = f"{self.env['USER']}@{self.env['HOST']} {path}: $"
-        self.tick = time.time()
 
     def add_to_display(self, output: str):
-        self.visualLine.append(f">{output}")
+        self.visualLine.append((self.prompt, f">{output}"))
 
     def clear(self):
         self.visualLine = []
@@ -74,10 +79,12 @@ class Term:
 
     def setenv(self, var, value):
         self.env[var] = value
+        self.blinkX = 0
 
     def draw(self):
         for lineIndex, line in enumerate(self.visualLine):
-            toshow = f"{self.prompt} {line}" if line[0] != '>' else line[1:]
+            toshow = line[1][1:] if len(line[1]) > 1 and line[1][0] == '>' else f"{line[0]} {line[1]}"
+            
             self.surface.blit(
                 self.mono.render(
                     toshow,
@@ -98,58 +105,52 @@ class Term:
 
     def keydown(self, keycode: int):
         keyName = pygame.key.name(keycode)
-        # ~ print(keyName)
-
-        if keyName == '\'':
-            self.currentTyping += '\''
 
         if keyName == "<" \
             and pygame.key.get_mods() & pygame.KMOD_SHIFT:
                 self.currentTyping += '>'
 
-        elif keyName == "<":
-            self.currentTyping += '<'
+        elif keyName == "&" and pygame.key.get_mods() & pygame.KMOD_MODE:
+            self.currentTyping += '|'
 
-        if keyName == "\"":
-            self.currentTyping += "\""
-
-        if keyName == "[.]" or keyName == ';'\
+        elif keyName == "[.]" or keyName == ';'\
             and pygame.key.get_mods() & pygame.KMOD_SHIFT:
                 self.currentTyping += '.'
 
-        if keyName == "[/]" or keyName == ':'\
+        elif keyName == "[/]" or keyName == ':'\
             and pygame.key.get_mods() & pygame.KMOD_SHIFT:
                 self.currentTyping += '/'
 
-        if keyName == "-" and pygame.key.get_mods() & pygame.KMOD_SHIFT:
+        elif keyName == "-" and pygame.key.get_mods() & pygame.KMOD_SHIFT:
             self.currentTyping += '_'
 
 
-        elif keyName == "[-]" or keyName == "-":
+        elif keyName == "[-]":
             self.currentTyping += '-'
 
-        if keyName == "backspace":
+        elif keyName == "backspace":
             self.currentTyping = self.currentTyping[:-1]
             self.blinkX = 0
 
-        if keyName == "return":
-            self.visualLine.append(self.currentTyping)
+        elif keyName == "return":
+            self.visualLine.append((self.prompt, self.currentTyping))
             self.history.append(self.currentTyping)
-            execute(self.currentTyping, self)
+            execute_and_out(self.currentTyping, self)
             self.currentTyping = ""
             self.blinkX = 0
 
-        if keyName == "space":
+        elif keyName == "space":
             self.currentTyping += ' '
 
-        if keyName == "c" and pygame.key.get_mods() & pygame.KMOD_CTRL:
-            self.visualLine.append(self.currentTyping+"^C")
+        elif keyName == "c" and pygame.key.get_mods() & pygame.KMOD_CTRL:
+            self.visualLine.append((self.prompt, self.currentTyping+"^C"))
             self.currentTyping = ""
+            self.blinkX = 0
 
         elif keyName in ascii_lowercase and pygame.key.get_mods() & pygame.KMOD_SHIFT:
             self.currentTyping += keyName.upper()
 
-        elif keyName in ascii_lowercase or keyName in ['&']:
+        elif keyName in ascii_lowercase or keyName in ['&', '-', '=', '$', ';', '<', '\'', '\"', '(', ')', '!']:
             self.currentTyping += keyName
 
     def drawBlink(self):
@@ -165,6 +166,7 @@ class Term:
     def update(self):
         self.surface.fill((0, 0, 0))
         self.draw()
+        self.updatePrompt()
         if 0.3 < time.time() - self.tick < 0.8:
             self.drawBlink()
             while self.blinkRect is None or \
