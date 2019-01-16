@@ -6,10 +6,11 @@ class Interpreter:
         self.term = term 
         self.lexer = Lexer()
         self.parser = Parser()
+        self.tree = None
 
     def evaluate(self, command):
         lex = self.lexer.tokenize(command)
-        tree = self.parser.parse(lex)
+        self.tree = self.parser.parse(lex)
 
-        if tree[0] == "PYTHON":
-            print(tree[1])
+    def get_tree(self):
+        return self.tree

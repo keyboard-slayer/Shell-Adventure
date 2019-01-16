@@ -46,20 +46,31 @@ class SAdvParser(Parser):
 
     @_('FUN NAME')
     def statement(self, p):
-        self.env[self.NAME] = []
-        self.infunc = self.NAME
-    
-    @_('"\t"statement')
+        self.env[p.NAME] = []
+        self.func = p.NAME
+
+    @_('CALL NAME')
+    def statement(self, p):
+        return self.env[p.NAME]
+
+    @_('TAB statement')
     def statement(self, p):
         if not self.func:
            raise IndentationError("unexpected indent")
         else:
-            self.env[self.infunc].append(p.statement)
+            self.env[self.func].append(p.statement)
     
-    @_('END FUN')
+    @_('SPACE statement')
+    def statement(self, p):
+        if not self.func:
+           raise IndentationError("unexpected indent")
+        else:
+            if p.statement is not None:
+                self.env[self.func].append(p.statement) 
+
+    @_('END')
     def statement(self, p):
         if not self.func:
             raise SyntaxError()
         else:
-            return (self.func, '\n'.join(self.env[self.func]))
             self.func = ""

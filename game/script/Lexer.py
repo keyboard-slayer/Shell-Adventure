@@ -4,8 +4,6 @@
 from sly import Lexer
 
 class SAdvLexer(Lexer):
-    literals = {"", ":", "\t"}
-
     tokens = {
         COMMENT,  
         SAY,
@@ -20,10 +18,13 @@ class SAdvLexer(Lexer):
         EXIT,
         FUN,
         NAME,
-        END
+        END,
+        TAB,
+        SPACE,
+        CALL
     }
 
-    ignore = ' '
+    ignore = '\n '
 
     SAY = r'(?i)SAY'
     OBJECTIF = r'(?i)OBJECTIF'
@@ -33,9 +34,11 @@ class SAdvLexer(Lexer):
     THEN = r'(?i)THEN'
     EXIT = r'(?i)EXIT'
     EXEC = r'(?i)EXEC'
-    SUB = r'(?i)FUN'
+    FUN = r'(?i)FUN'
     END = r'(?i)END'
+    CALL = r'(?i)CALL'
     NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'
+    TAB = r'\t'
 
     ignore_newline = r'\n'
 
