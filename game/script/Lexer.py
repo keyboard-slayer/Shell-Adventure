@@ -4,9 +4,10 @@
 from sly import Lexer
 
 class SAdvLexer(Lexer):
+    literals = {"", ":", "\t"}
+
     tokens = {
-        COMMENT, 
-        BEGIN, 
+        COMMENT,  
         SAY,
         OBJECTIF,
         WAIT,
@@ -15,19 +16,28 @@ class SAdvLexer(Lexer):
         THEN,
         STRING,
         EXEC,
+        RUN,
+        EXIT,
+        FUN,
+        NAME,
         END
     }
 
-    ignore = ' \t'
+    ignore = ' '
 
-    BEGIN = r'(?i)BEGIN'
-    EXEC = r'(?i)EXEC'
     SAY = r'(?i)SAY'
-    OBEJCTIF = r'(?i)OBEJCTIF'
+    OBJECTIF = r'(?i)OBJECTIF'
     WAIT = r'(?i)WAIT'
     FILE = r'(?i)FILE'
     DIR = r'(?i)DIR'
     THEN = r'(?i)THEN'
+    EXIT = r'(?i)EXIT'
+    EXEC = r'(?i)EXEC'
+    SUB = r'(?i)FUN'
+    END = r'(?i)END'
+    NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'
+
+    ignore_newline = r'\n'
 
     @_(r';.*')
     def COMMENT(self, t):
@@ -38,4 +48,10 @@ class SAdvLexer(Lexer):
         t.value = t.value.replace('\"', '')
         return t 
 
+    def ignore_newline(self, t):
+        self.lineno += t.value.count('\n')
+
+    def error(self, t):
+        print("Illegal character '%s'" % t.value[0])
+        self.index += 1
 

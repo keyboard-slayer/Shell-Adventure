@@ -10,6 +10,7 @@ class SAdvParser(Parser):
 
     def __init__(self):
         self.env = {}
+        self.func = ""
 
     @_('', 'COMMENT')
     def statement(self, p):
@@ -17,11 +18,11 @@ class SAdvParser(Parser):
     
     @_('SAY STRING')
     def statement(self, p):
-        return ('PYTHON', f'term.add_to_display({p.STRING})')
+        return ('PYTHON', f'self.term.add_to_display(\"{p.STRING}\")')
 
     @_('OBJECTIF STRING')
     def statement(self, p):
-        return ('PYTHON', f'quest.add({p.STRING})')
+        return ('PYTHON', f'self.quest.add(\"{p.STRING}\")')
 
     @_('WAIT FILE STRING THEN statement')
     def statement(self, p):
@@ -31,15 +32,34 @@ class SAdvParser(Parser):
     def statement(self, p):
         return ('WAIT', 'DIR', p.STRING, p.statement)
 
+    @_('EXIT')
+    def statement(self, p):
+        return ('PYTHON', 'exit()')
+
+    @_('RUN STRING')
+    def statement(self, p):
+        return ("PYTHON", f'self.term.exec_sh(\"{p.STRING}\")') # TODO
     
-    @_('BEGIN')
-    def statement(self, p):
-        return ('START')
-
-    @_('END')
-    def statement(self, p):
-        return ('END')
-
     @_('EXEC STRING')
     def statement(self, p):
-        return ('exec', p.STRING)
+        return ("PYTHON", f'self.term.exec(\"{p.STRING}\")') # TODO
+
+    @_('FUN NAME')
+    def statement(self, p):
+        self.env[self.NAME] = []
+        self.infunc = self.NAME
+    
+    @_('"\t"statement')
+    def statement(self, p):
+        if not self.func:
+           raise IndentationError("unexpected indent")
+        else:
+            self.env[self.infunc].append(p.statement)
+    
+    @_('END FUN')
+    def statement(self, p):
+        if not self.func:
+            raise SyntaxError()
+        else:
+            return (self.func, '\n'.join(self.env[self.func]))
+            self.func = ""

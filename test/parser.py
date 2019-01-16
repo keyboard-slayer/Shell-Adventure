@@ -7,7 +7,7 @@
 
 from game.script.Lexer import SAdvLexer as Lexer
 from game.script.Parser import SAdvParser as Parser
-from game.script.Executer import SAdvExec as Executer 
+# from game.script.Executer import SAdvExec as Executer 
 
 if __name__ == "__main__":
     lexer = Lexer()
@@ -17,4 +17,5 @@ if __name__ == "__main__":
         lex = Lexer()
         parser = Parser()
         tree = parser.parse(lexer.tokenize(text))
+        print(tree)
         

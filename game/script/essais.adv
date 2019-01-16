@@ -2,12 +2,15 @@
 ;   TEST
 ;
 
-BEGIN
-EXEC "test.sh"
-SAY "Bonjour utilisateur !"
-OBJECTIF "Créer un fichier X"
-WAIT FILE "X" THEN SAY "Bien joué"
-OBJECTIF "Créer un dossier Y"
-WAIT DIR "Y" THEN SAY "Tu es le meillieur"
-END 
+FUN essais:                                 ; Définition de fonctions
+    SAY "hi"                                ; Fonctions
+END FUN                                     ; Fin de fonction
+
+RUN "test.sh"                               ; Execution du fichier dans le terminal
+SAY "Bonjour utilisateur !"                 ; Dire quelques chose dans le terminal 
+OBJECTIF "Créer un fichier X"               ; Créer un objectif
+WAIT FILE "X" THEN SAY "Bien joué"          ; Attendre un fichier alors faire qlq choses
+OBJECTIF "Créer un dossier Y"               ; Créer un objectif
+WAIT DIR "Y" THEN SAY "Tu es le meillieur"  ; Attendre un dosssier alors faire qlq choses
+
 
