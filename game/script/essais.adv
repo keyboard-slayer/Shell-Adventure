@@ -2,9 +2,11 @@
 ;   TEST
 ;
 
-FUN essais:                                 ; Définition de fonctions
-	SAY "hi"                                ; Fonctions
-END FUN                                     ; Fin de fonction
+FUN essais                                 ; Définition de fonctions
+	SAY "hi"                               ; Fonctions
+	OBJECTIF "Créer un fichier Z"
+	WAIT DIR "Z" THEN SAY "Fin des tests :p"
+END                                        ; Fin de fonction
 
 RUN "test.sh"                               ; Execution du fichier dans le terminal
 SAY "Bonjour utilisateur !"                 ; Dire quelques chose dans le terminal 
@@ -12,4 +14,4 @@ OBJECTIF "Créer un fichier X"               ; Créer un objectif
 WAIT FILE "X" THEN SAY "Bien joué"          ; Attendre un fichier alors faire qlq choses
 OBJECTIF "Créer un dossier Y"               ; Créer un objectif
 WAIT DIR "Y" THEN SAY "Tu es le meillieur"  ; Attendre un dosssier alors faire qlq choses
-EXIT 
+CALL essais                                 ; Appels de la fonction

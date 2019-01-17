@@ -5,7 +5,7 @@ from sly import Lexer
 
 class SAdvLexer(Lexer):
     tokens = {
-        COMMENT,  
+        COMMENT,
         SAY,
         OBJECTIF,
         WAIT,
@@ -21,14 +21,17 @@ class SAdvLexer(Lexer):
         END,
         TAB,
         SPACE,
-        CALL
+        CALL,
+        DONE
     }
 
     ignore = '\n '
 
     SAY = r'(?i)SAY'
+    DONE = r'(?i)DONE'
     OBJECTIF = r'(?i)OBJECTIF'
     WAIT = r'(?i)WAIT'
+    RUN = r'(?i)RUN'
     FILE = r'(?i)FILE'
     DIR = r'(?i)DIR'
     THEN = r'(?i)THEN'
@@ -49,7 +52,7 @@ class SAdvLexer(Lexer):
     @_(r'("([^"]|"")*")')
     def STRING(self, t):
         t.value = t.value.replace('\"', '')
-        return t 
+        return t
 
     def ignore_newline(self, t):
         self.lineno += t.value.count('\n')
@@ -57,4 +60,3 @@ class SAdvLexer(Lexer):
     def error(self, t):
         print("Illegal character '%s'" % t.value[0])
         self.index += 1
-

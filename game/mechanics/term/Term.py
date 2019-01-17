@@ -17,9 +17,9 @@ from game.mechanics.term.History import History
 
 
 class Term:
-    def __init__(self, username: str, host: str, size: Tuple[int, int]):
+    def __init__(self, username: str, host: str, size: Tuple[int, int], font: pygame.font.Font):
         self.surface = pygame.Surface(size)
-        self.mono = pygame.font.Font("font/monospace.ttf", 22)
+        self.mono = font
         self.visualLine = []
         self.lineRect = None
         self.blinkRect = None
@@ -55,8 +55,8 @@ class Term:
             "USER": username,
             "HOST": host
         }
-        
-        os.chdir(self.env["HOME"])
+
+        # os.chdir(self.env["HOME"])
         self.tick = time.time()
         self.updatePrompt()
 
@@ -84,7 +84,7 @@ class Term:
     def draw(self):
         for lineIndex, line in enumerate(self.visualLine):
             toshow = line[1][1:] if len(line[1]) > 1 and line[1][0] == '>' else f"{line[0]} {line[1]}"
-            
+
             self.surface.blit(
                 self.mono.render(
                     toshow,

@@ -30,7 +30,7 @@ def execute(cmd: str, term: object) -> str:
         elif command == "clear":
             term.clear()
             return ""
-        
+
         elif command == "pwd":
             return f"~{term.getenv()['PWD'].split(term.getenv()['HOME'])[-1]}"
 
@@ -100,3 +100,8 @@ def execute_and_out(cmd: str, term: object):
     if result:
         for out in [word for word in result.split('\n') if word]:
             term.add_to_display(out)
+
+def file_and_out(filename: str, term:object):
+    with open(filename, 'r') as bash:
+        for line in bash.readlines():
+            execute_and_out(line, term)

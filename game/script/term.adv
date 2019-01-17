@@ -1,0 +1,13 @@
+FUN lambda
+	SAY "Hello :p"
+	SAY "Yeah"
+	SAY "Hey"
+END FUN
+
+SAY "OK"
+OBJECTIF essais "Lorem ipsum dolor sit amet"
+OBJECTIF ok "This is cool ?"
+DONE essais
+CALL lambda
+RUN "ls"
+EXEC "core.sh"

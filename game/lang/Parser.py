@@ -3,31 +3,40 @@
 
 from sly import Parser
 
-from game.script.Lexer import SAdvLexer
+from game.lang.Lexer import SAdvLexer
 
 class SAdvParser(Parser):
     tokens = SAdvLexer.tokens
 
     def __init__(self):
         self.env = {}
+        self.obj = []
         self.func = ""
 
     @_('', 'COMMENT')
     def statement(self, p):
-        pass 
-    
+        pass
+
     @_('SAY STRING')
     def statement(self, p):
-        return ('PYTHON', f'self.term.add_to_display(\"{p.STRING}\")')
+        return [('PYTHON', f'self.term.add_to_display(\"{p.STRING}\")')]
 
-    @_('OBJECTIF STRING')
+    @_('OBJECTIF NAME STRING')
     def statement(self, p):
-        return ('PYTHON', f'self.quest.add(\"{p.STRING}\")')
+        self.obj.append(p.NAME)
+        return [('PYTHON', f'self.quest.add(\"{p.NAME}\", \"{p.STRING}\")')]
+
+    @_('DONE NAME')
+    def statement(self, p):
+        if p.NAME in self.obj:
+            return [('PYTHON', f'self.quest.done(\"{p.NAME}\")')]
+        else:
+            raise NameError(f"{p.NAME} is not declared")
 
     @_('WAIT FILE STRING THEN statement')
     def statement(self, p):
         return ('WAIT', 'FILE', p.STRING, p.statement)
-    
+
     @_('WAIT DIR STRING THEN statement')
     def statement(self, p):
         return ('WAIT', 'DIR', p.STRING, p.statement)
@@ -38,11 +47,11 @@ class SAdvParser(Parser):
 
     @_('RUN STRING')
     def statement(self, p):
-        return ("PYTHON", f'self.term.exec_sh(\"{p.STRING}\")') # TODO
-    
+        return [("PYTHON", f'execute_and_out(\"{p.STRING}\", self.term)')]
+
     @_('EXEC STRING')
     def statement(self, p):
-        return ("PYTHON", f'self.term.exec(\"{p.STRING}\")') # TODO
+        return [("PYTHON", f'file_and_out(\"{p.STRING}\", self.term)')]
 
     @_('FUN NAME')
     def statement(self, p):
@@ -51,6 +60,7 @@ class SAdvParser(Parser):
 
     @_('CALL NAME')
     def statement(self, p):
+        print(self.env[p.NAME])
         return self.env[p.NAME]
 
     @_('TAB statement')
@@ -59,14 +69,14 @@ class SAdvParser(Parser):
            raise IndentationError("unexpected indent")
         else:
             self.env[self.func].append(p.statement)
-    
+
     @_('SPACE statement')
     def statement(self, p):
         if not self.func:
            raise IndentationError("unexpected indent")
         else:
             if p.statement is not None:
-                self.env[self.func].append(p.statement) 
+                self.env[self.func].append(p.statement)
 
     @_('END')
     def statement(self, p):
