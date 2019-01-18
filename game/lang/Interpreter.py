@@ -27,9 +27,7 @@ class Interpreter:
                     exec(code[1])
                     
                 if code[0] == "WAIT":
-                    print(True)
-                    self.instruction[datetime.datetime.now(), datetime.timedelta(0, code[0])] = code[1]
-                    print(self.instruction)
+                    self.instruction[datetime.datetime.now() + datetime.timedelta(0, int(code[1][:-1]))] = code[2]
 
 
 
