@@ -45,7 +45,6 @@ class SAdvLexer(Lexer):
     TAB = r'\t'
     TIME = r'[0-9]+s'
 
-
     ignore_newline = r'\n'
 
     @_(r';.*')

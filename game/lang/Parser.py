@@ -28,10 +28,9 @@ class SAdvParser(Parser):
 
     @_('DONE NAME')
     def statement(self, p):
-        if p.NAME in self.obj:
-            return [('PYTHON', f'self.quest.done(\"{p.NAME}\")')]
-        else:
-            raise NameError(f"{p.NAME} is not declared")
+        return [('PYTHON', f'self.quest.done(\"{p.NAME}\")')]
+
+           
 
     @_('WAIT FILE STRING THEN statement')
     def statement(self, p):

@@ -22,11 +22,12 @@ def launchGame():
     pygame.draw.rect(display, (0, 255, 0), (0, 0, 1420, 1080))  #  Jeu principal -> Vive le rpg
 
     lang = Interpreter(term, quest)
-    lang.execute("term.adv")
+    lang.execute("manipulation.adv")
 
     while True:
         display.blit(term.get_surface(), (1420, 0))
         display.blit(quest.get_surface(), (1420, 540))
+        lang.mainloop()
         pygame.display.flip()
 
         for event in pygame.event.get():

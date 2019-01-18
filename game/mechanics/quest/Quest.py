@@ -18,7 +18,10 @@ class Quest:
         self.quests[var] = event
 
     def done(self, questVar):
-        self.quests[questVar] = f'>{self.quests[questVar]}'
+        if questVar not in self.quests:
+            raise NameError(f"{p.NAME} is not declared")
+        else:
+            self.quests[questVar] = f'>{self.quests[questVar]}'
 
     def update(self):
         mark = False
