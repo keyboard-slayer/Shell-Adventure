@@ -4,6 +4,11 @@ FUN lambda
 	SAY "Hey"
 END FUN
 
+FUN testTime
+	SAY "Le temps passe vite ?"
+	SAY "Wait..."
+END FUN
+
 SAY "OK"
 OBJECTIF essais "Lorem ipsum dolor sit amet"
 OBJECTIF ok "This is cool ?"
@@ -11,3 +16,5 @@ DONE essais
 CALL lambda
 RUN "ls"
 EXEC "core.sh"
+WAIT 2s THEN CALL testTime
+

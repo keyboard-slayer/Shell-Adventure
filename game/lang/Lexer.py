@@ -22,7 +22,8 @@ class SAdvLexer(Lexer):
         TAB,
         SPACE,
         CALL,
-        DONE
+        DONE,
+        TIME
     }
 
     ignore = '\n '
@@ -42,6 +43,8 @@ class SAdvLexer(Lexer):
     CALL = r'(?i)CALL'
     NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'
     TAB = r'\t'
+    TIME = r'[0-9]+s'
+
 
     ignore_newline = r'\n'
 

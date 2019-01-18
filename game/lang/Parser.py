@@ -35,15 +35,20 @@ class SAdvParser(Parser):
 
     @_('WAIT FILE STRING THEN statement')
     def statement(self, p):
-        return ('WAIT', 'FILE', p.STRING, p.statement)
+        return [('WAIT', 'FILE', p.STRING, p.statement)]
 
     @_('WAIT DIR STRING THEN statement')
     def statement(self, p):
-        return ('WAIT', 'DIR', p.STRING, p.statement)
+        return [('WAIT', 'DIR', p.STRING, p.statement)]
+
+
+    @_('WAIT TIME THEN statement')
+    def statement(self, p):
+        return [('WAIT', p.TIME, p.statement)]
 
     @_('EXIT')
     def statement(self, p):
-        return ('PYTHON', 'exit()')
+        return [('PYTHON', 'exit()')]
 
     @_('RUN STRING')
     def statement(self, p):
@@ -60,7 +65,6 @@ class SAdvParser(Parser):
 
     @_('CALL NAME')
     def statement(self, p):
-        print(self.env[p.NAME])
         return self.env[p.NAME]
 
     @_('TAB statement')
@@ -78,7 +82,7 @@ class SAdvParser(Parser):
             if p.statement is not None:
                 self.env[self.func].append(p.statement)
 
-    @_('END')
+    @_('END FUN')
     def statement(self, p):
         if not self.func:
             raise SyntaxError()
