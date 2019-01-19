@@ -7,11 +7,13 @@ import os
 import datetime
 
 class Interpreter:
-    def __init__(self, term: object, quest: object):
+    def __init__(self, gameDir: str, term: object, quest: object, rpg: object):
         self.term = term
         self.quest = quest
+        self.rpg = rpg
         self.lexer = Lexer()
         self.parser = Parser()
+        self.gameDir = gameDir
         self.buffer = {
             'FILE': ({}, os.path.isfile), 
             'DIR': ({},  os.path.isdir),
@@ -19,6 +21,8 @@ class Interpreter:
             'DELFILE': ({}, lambda fichier: not os.path.isfile(fichier)),
             'DELDIR': ({}, lambda dossier: not os.path.isdir(dossier)) 
         }
+
+        self.pos = {'term': (1420, 0), 'quest': (1420, 540), 'rpg': (0, 0)}
 
     def parse(self, command):
         lex = self.lexer.tokenize(command)
@@ -32,12 +36,14 @@ class Interpreter:
                 
                 if code[0] == "PYTHON":
                     exec(code[1])
+
+                if code[0] == "REPEAT":
+                    for _ in range(int(code[1])):
+                        self.evaluate(code[2])
                     
                 if code[0] == "WAIT":
-                    # print(code[1])
                     if code[1][-1] == 's':
                         self.buffer['TIME'][0][datetime.datetime.now() + datetime.timedelta(0, int(code[1][:-1]))] = code[2]
-                        print(self.buffer['TIME'])
                     
                     if code[1] in self.buffer.keys():
                         self.buffer[code[1]][0][code[2]] = code[3]
@@ -45,13 +51,16 @@ class Interpreter:
                 if code[0] == "EXIST":
                     if os.path.isfile(code[1]) or os.path.isdir(code[1]):
                         self.evaluate(code[2])
+
+                if code[0] == "DISABLE":
+                    exec(f"self.{code[1]}.resize((0, 0))")
+                    self.pos[code[1]] = (6666, 6666)
             return 0
         except TypeError:
             return 1
 
 
     def mainloop(self):
-        print(self.buffer)
         for wait in self.buffer.keys():
             loop = 0
             check = self.buffer[wait][1]
@@ -61,8 +70,10 @@ class Interpreter:
                     del self.buffer[wait][0][list(self.buffer[wait][0].keys())[loop]]
                 loop += 1
 
+        return list(self.pos.values())
+
     def execute(self, file):
-        with open(f"./game/script/{file}", 'r') as script:
+        with open(f"{self.gameDir}/game/script/{file}", 'r') as script:
             for line in script.readlines():
                 tree = self.parse(line)
                 self.evaluate(tree)

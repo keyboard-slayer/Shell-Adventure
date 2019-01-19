@@ -12,6 +12,9 @@ class Quest:
         self.mono = font
         self.quests = {}
 
+    def resize(self, size: Tuple[int, int]):
+        self.surface = pygame.Surface(size)
+
     def add(self, var: str, event: str):
         if len(self.quests) == 18:
             raise Exception("Too much quest !")
@@ -47,7 +50,7 @@ class Quest:
                         True,
                         (0, 255, 0)
                     ),
-                    (self.surface.get_size()[0]-100, index*22+50)
+                    (self.surface.get_size()[0]-50, index*22+50)
                 )
 
                 mark = False

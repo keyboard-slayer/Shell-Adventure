@@ -1,0 +1,27 @@
+;
+; Introduction Shell-Adventure
+;
+
+FUN infinity
+    SAY "Hey"
+    WAIT 1s THEN CALL infinity
+END FUN
+
+FUN infinity2
+    SAY "Hi"
+    WAIT 1s THEN CALL infinity2
+END FUN
+
+SAY "RUNNING INTRO"
+
+DISABLE RPG
+DISABLE QUEST
+SETPOS TERM 0 0
+SETSIZE TERM 1920 1080
+
+CALL infinity
+CALL infinity2
+
+LOOP 5 TIME 
+    SAY "Keep Going ..."
+END LOOP

@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import os
 import pygame
 
 from pygame.locals import *
 from game.mechanics.term.Term import Term
 from game.mechanics.quest.Quest import Quest
+from game.mechanics.rpg.Rpg import Rpg
 from game.lang.Interpreter import Interpreter
 
+GAMEFILES = os.getcwd()
 
 def launchGame():
     pygame.init()
@@ -18,16 +21,16 @@ def launchGame():
 
     term = Term("test-user", "localhost", (500, 540), font=mono)
     quest = Quest((500, 540), font=mono)
+    rpg = Rpg((1420, 1080))
 
-    pygame.draw.rect(display, (0, 255, 0), (0, 0, 1420, 1080))  #  Jeu principal -> Vive le rpg
-
-    lang = Interpreter(term, quest)
-    lang.execute("test-wait.adv")
-
+    lang = Interpreter(GAMEFILES, term, quest, rpg)
+    os.chdir(term.getenv()["HOME"])
+    lang.execute("Intro/intro.adv")
     while True:
-        display.blit(term.get_surface(), (1420, 0))
-        display.blit(quest.get_surface(), (1420, 540))
-        lang.mainloop()
+        termPos, questPos, rpgPos = lang.mainloop()
+        display.blit(term.get_surface(), termPos)
+        display.blit(quest.get_surface(), questPos)
+        display.blit(rpg.get_surface(), rpgPos)
         pygame.display.flip()
 
         for event in pygame.event.get():

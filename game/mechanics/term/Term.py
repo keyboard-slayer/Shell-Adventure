@@ -60,6 +60,9 @@ class Term:
         self.tick = time.time()
         self.updatePrompt()
 
+    def resize(self, size: Tuple[int, int]):
+        self.surface = pygame.Surface(size)
+
     def updatePrompt(self):
         if self.env["PWD"][:len(self.env["HOME"])] == self.env["HOME"]:
             path = f"~{self.env['PWD'].split(self.env['HOME'])[1]}"
@@ -82,6 +85,9 @@ class Term:
         self.blinkX = 0
 
     def draw(self):
+        if len(self.visualLine) * 22 >= self.surface.get_size()[1] - 175:
+                self.visualLine = self.visualLine[1:]
+
         for lineIndex, line in enumerate(self.visualLine):
             toshow = line[1][1:] if len(line[1]) > 1 and line[1][0] == '>' else f"{line[0]} {line[1]}"
 

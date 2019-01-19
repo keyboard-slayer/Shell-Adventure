@@ -26,11 +26,21 @@ class SAdvLexer(Lexer):
         TIME,
         DELFILE,
         DELDIR,
-        IFEXIST
+        IFEXIST,
+        DISABLE,
+        GAMEPART,
+        SETPOS,
+        SETSIZE,
+        NUM,
+        LOOP, 
+        TIMES
     }
 
     ignore = '\n'
 
+
+    GAMEPART = r'(?i)(TERM|QUEST|RPG)'    
+    DISABLE = r'(?i)DISABLE'
     SAY = r'(?i)SAY'
     DONE = r'(?i)DONE'
     OBJECTIF = r'(?i)OBJECTIF'
@@ -47,10 +57,16 @@ class SAdvLexer(Lexer):
     DELFILE = r'(?i)DELFILE'
     DELDIR = r'(?i)DELDIR'
     IFEXIST = r'(?i)IFEXIST'
+    SETPOS = r'(?i)SETPOS'
+    SETSIZE = r'(?i)SETSIZE'
+    LOOP = r'(?i)LOOP'
+    TIMES = r'(?i)TIME'
     NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'
     TAB = r'\t'
     TIME = r'[0-9]+s'
+    NUM = r'\d{1,10}'
     SPACE = r'    '
+
 
     ignore_newline = r'\n'
 

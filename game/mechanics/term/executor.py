@@ -103,5 +103,27 @@ def execute_and_out(cmd: str, term: object):
 
 def file_and_out(filename: str, term:object):
     with open(filename, 'r') as bash:
+        writeBuffer = []
+        cat = False
+        eof = False
         for line in bash.readlines():
-            execute_and_out(line, term)
+            print(f"eof: {eof} cat: {cat}")
+            print(line.encode("utf-8"))
+            eof = line == "EOF"
+        
+            if line[:-1] == "cat << EOF" and not cat:
+                cat = True 
+                continue
+
+            if not cat:
+                execute_and_out(line, term)
+            elif not eof and cat:
+                writeBuffer.append(line)
+            if eof and cat:
+                cat = False 
+                eof = False 
+                print(True)
+                for towrite in writeBuffer:
+                    execute_and_out(f"echo {towrite}", term)
+                writeBuffer = []
+
