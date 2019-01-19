@@ -29,6 +29,7 @@ class Interpreter:
             for code in tree:
                 if type(code) == list:
                     code = code[0]
+                
                 if code[0] == "PYTHON":
                     exec(code[1])
                     
@@ -40,7 +41,10 @@ class Interpreter:
                     
                     if code[1] in self.buffer.keys():
                         self.buffer[code[1]][0][code[2]] = code[3]
-
+                
+                if code[0] == "EXIST":
+                    if os.path.isfile(code[1]) or os.path.isdir(code[1]):
+                        self.evaluate(code[2])
             return 0
         except TypeError:
             return 1

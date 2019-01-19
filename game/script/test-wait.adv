@@ -1,0 +1,16 @@
+FUN deletefichier
+    DONE fichier 
+    OBJECTIF delfile "Supprime le fichier nommé fichier"
+END FUN 
+
+FUN deletedossier
+    DONE dossier 
+END FUN
+
+IFEXIST "fichier" THEN EXEC "rm fichier"
+IFEXIST "dossier" THEN EXEC "rmdir dossier"
+
+OBJECTIF fichier "Crée un fichier nommé fichier"
+OBJECTIF dossier "Crée un dossier nommé dossier"
+WAIT FILE "fichier" THEN CALL deletefichier
+WAIT DIR "dossier" THEN CALL deletedossier

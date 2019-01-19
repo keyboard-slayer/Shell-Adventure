@@ -30,8 +30,6 @@ class SAdvParser(Parser):
     def statement(self, p):
         return [('PYTHON', f'self.quest.done(\"{p.NAME}\")')]
 
-           
-
     @_('WAIT FILE STRING THEN statement')
     def statement(self, p):
         return [('WAIT', 'FILE', p.STRING, p.statement)]
@@ -45,15 +43,23 @@ class SAdvParser(Parser):
     def statement(self, p):
         return [('WAIT', p.TIME, p.statement)]
 
+    @_('WAIT DELFILE STRING THEN statement')
+    def statement(self, p):
+        return [('WAIT', 'DELFILE', p.STRING, p.statement)]
+    
+    @_('WAIT DELDIR STRING THEN statement')
+    def statement(self, p):
+        return [('WAIT', 'DELDIR', p.STRING, p.statement)]
+
     @_('EXIT')
     def statement(self, p):
         return [('PYTHON', 'exit()')]
 
-    @_('RUN STRING')
+    @_('EXEC STRING')
     def statement(self, p):
         return [("PYTHON", f'execute_and_out(\"{p.STRING}\", self.term)')]
 
-    @_('EXEC STRING')
+    @_('RUN STRING')
     def statement(self, p):
         return [("PYTHON", f'file_and_out(\"{p.STRING}\", self.term)')]
 
@@ -78,8 +84,7 @@ class SAdvParser(Parser):
         if not self.func:
            raise IndentationError("unexpected indent")
         else:
-            if p.statement is not None:
-                self.env[self.func].append(p.statement)
+            self.env[self.func].append(p.statement)
 
     @_('END FUN')
     def statement(self, p):
@@ -87,3 +92,7 @@ class SAdvParser(Parser):
             raise SyntaxError()
         else:
             self.func = ""
+
+    @_('IFEXIST STRING THEN statement')
+    def statement(self, p):
+        return [("EXIST", p.STRING, p.statement)]

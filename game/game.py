@@ -22,7 +22,7 @@ def launchGame():
     pygame.draw.rect(display, (0, 255, 0), (0, 0, 1420, 1080))  #  Jeu principal -> Vive le rpg
 
     lang = Interpreter(term, quest)
-    lang.execute("manipulation.adv")
+    lang.execute("test-wait.adv")
 
     while True:
         display.blit(term.get_surface(), (1420, 0))

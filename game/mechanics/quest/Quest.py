@@ -19,7 +19,7 @@ class Quest:
 
     def done(self, questVar):
         if questVar not in self.quests:
-            raise NameError(f"{p.NAME} is not declared")
+            raise NameError(f"{questVar} is not declared")
         else:
             self.quests[questVar] = f'>{self.quests[questVar]}'
 

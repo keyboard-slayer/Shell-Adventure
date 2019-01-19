@@ -23,10 +23,13 @@ class SAdvLexer(Lexer):
         SPACE,
         CALL,
         DONE,
-        TIME
+        TIME,
+        DELFILE,
+        DELDIR,
+        IFEXIST
     }
 
-    ignore = '\n '
+    ignore = '\n'
 
     SAY = r'(?i)SAY'
     DONE = r'(?i)DONE'
@@ -41,9 +44,13 @@ class SAdvLexer(Lexer):
     FUN = r'(?i)FUN'
     END = r'(?i)END'
     CALL = r'(?i)CALL'
+    DELFILE = r'(?i)DELFILE'
+    DELDIR = r'(?i)DELDIR'
+    IFEXIST = r'(?i)IFEXIST'
     NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'
     TAB = r'\t'
     TIME = r'[0-9]+s'
+    SPACE = r'    '
 
     ignore_newline = r'\n'
 
