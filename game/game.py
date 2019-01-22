@@ -24,7 +24,7 @@ def launchGame():
     rpg = Rpg((1420, 1080))
 
     lang = Interpreter(GAMEFILES, term, quest, rpg)
-    os.chdir(term.getenv()["HOME"])
+    # os.chdir(term.getenv()["HOME"])
     lang.execute("Intro/intro.adv")
     while True:
         termPos, questPos, rpgPos = lang.mainloop()

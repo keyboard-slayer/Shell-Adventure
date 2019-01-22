@@ -1,1 +1,1 @@
-echo From the sh file :p
+cat 

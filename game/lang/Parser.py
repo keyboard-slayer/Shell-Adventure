@@ -137,3 +137,12 @@ class SAdvParser(Parser):
     @_('SETSIZE GAMEPART NUM NUM')
     def statement(self, p):
         return [("PYTHON", f"self.{p.GAMEPART.lower()}.resize(({p.NUM0}, {p.NUM1}))")]
+    
+    @_('LOADPATH STRING')
+    def statement(self, p):
+        return [("SETPATH", p.STRING)]
+
+    @_('READFILE STRING')
+    def statement(self, p):
+        print(True)
+        return [("READFILE", p.STRING)]

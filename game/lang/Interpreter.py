@@ -14,6 +14,7 @@ class Interpreter:
         self.lexer = Lexer()
         self.parser = Parser()
         self.gameDir = gameDir
+        self.mainPath = None
         self.buffer = {
             'FILE': ({}, os.path.isfile), 
             'DIR': ({},  os.path.isdir),
@@ -55,6 +56,23 @@ class Interpreter:
                 if code[0] == "DISABLE":
                     exec(f"self.{code[1]}.resize((0, 0))")
                     self.pos[code[1]] = (6666, 6666)
+
+                if code[0] == "SETPATH":
+                    if os.path.isdir(os.path.join(self.gameDir, code[1])):
+                        self.mainPath = code[1]
+                    else:
+                        raise Exception(f"The directory {os.path.join(self.gameDir, code[1])} is not found")
+
+                if code[0] == "READFILE":
+                    print(True)
+                    if self.mainPath is None:
+                        raise Exception("the mainPath is undefined")
+                    else:
+                        if not os.path.isfile(os.path.join(self.mainPath, code[1])):
+                            raise Exception(f"Le fichier {os.path.join(self.mainPath, code[1])} est introuvable")
+                        else:
+                            execute_and_out(f"cat {os.path.join(self.mainPath, code[1])}", self.term)
+            
             return 0
         except TypeError:
             return 1

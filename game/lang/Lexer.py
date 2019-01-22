@@ -33,13 +33,17 @@ class SAdvLexer(Lexer):
         SETSIZE,
         NUM,
         LOOP, 
-        TIMES
+        TIMES,
+        LOADPATH,
+        READFILE
     }
 
     ignore = '\n'
 
 
-    GAMEPART = r'(?i)(TERM|QUEST|RPG)'    
+    READFILE = r'(?i)READFILE'
+    LOADPATH = r'(?i)LOADPATH'
+    GAMEPART = r'(?i)(TERM|QUEST|RPG)'
     DISABLE = r'(?i)DISABLE'
     SAY = r'(?i)SAY'
     DONE = r'(?i)DONE'
@@ -83,5 +87,4 @@ class SAdvLexer(Lexer):
         self.lineno += t.value.count('\n')
 
     def error(self, t):
-        print("Illegal character '%s'" % t.value[0])
         self.index += 1
