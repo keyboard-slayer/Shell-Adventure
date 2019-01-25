@@ -15,6 +15,7 @@ class Interpreter:
         self.parser = Parser()
         self.gameDir = gameDir
         self.mainPath = None
+        self.string = ""
         self.buffer = {
             'FILE': ({}, os.path.isfile), 
             'DIR': ({},  os.path.isdir),
@@ -28,6 +29,13 @@ class Interpreter:
     def parse(self, command):
         lex = self.lexer.tokenize(command)
         return self.parser.parse(lex)
+
+    def nextChar(self, time):
+        try:
+            self.term.add_to_display(next(self.string))
+            self.buffer["TIME"][0][datetime.datetime.now() + datetime.timedelta(float(time))] = [('PYTHON', f'self.nextChar(float({time[:-1]}))')]
+        except StopIteration:
+            return 1
 
     def evaluate(self, tree):
         try:
@@ -44,7 +52,8 @@ class Interpreter:
                     
                 if code[0] == "WAIT":
                     if code[1][-1] == 's':
-                        self.buffer['TIME'][0][datetime.datetime.now() + datetime.timedelta(0, int(code[1][:-1]))] = code[2]
+                        print(code[2])
+                        self.buffer['TIME'][0][datetime.datetime.now() + datetime.timedelta(0, float(code[1][:-1]))] = code[2]
                     
                     if code[1] in self.buffer.keys():
                         self.buffer[code[1]][0][code[2]] = code[3]
@@ -64,7 +73,6 @@ class Interpreter:
                         raise Exception(f"The directory {os.path.join(self.gameDir, code[1])} is not found")
 
                 if code[0] == "READFILE":
-                    print(True)
                     if self.mainPath is None:
                         raise Exception("the mainPath is undefined")
                     else:
@@ -72,14 +80,28 @@ class Interpreter:
                             raise Exception(f"Le fichier {os.path.join(self.mainPath, code[1])} est introuvable")
                         else:
                             execute_and_out(f"cat {os.path.join(self.mainPath, code[1])}", self.term)
-            
+
+
+                if code[0] == "TYPEFILE":
+                    if self.mainPath is None:
+                        raise Exception("the mainPath is undefined")
+                    else:
+                        if not os.path.isfile(os.path.join(self.mainPath, code[2])):
+                            raise Exception(f"Le fichier {os.path.join(self.mainPath, code[2])} est introuvable")
+                        else:
+                            with open(os.path.join(self.mainPath, code[2]), 'r') as file:
+                                self.string = iter(file.read())
+                                self.buffer['TIME'][0][datetime.datetime.now() + datetime.timedelta(0, float(code[1][:-1]))] = [('PYTHON', f'self.nextChar(float({code[1][:-1]}))')]
+                            
+                            
             return 0
         except TypeError:
             return 1
 
 
+
     def mainloop(self):
-        for wait in self.buffer.keys():
+        for wait in list(self.buffer.keys())[1:]:
             loop = 0
             check = self.buffer[wait][1]
             while len(self.buffer[wait][0]) > loop:

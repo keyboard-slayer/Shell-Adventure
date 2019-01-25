@@ -35,12 +35,13 @@ class SAdvLexer(Lexer):
         LOOP, 
         TIMES,
         LOADPATH,
-        READFILE
+        READFILE,
+        TYPEFILE
     }
 
     ignore = '\n'
 
-
+    TYPEFILE = r'(?i)TYPEFILE'
     READFILE = r'(?i)READFILE'
     LOADPATH = r'(?i)LOADPATH'
     GAMEPART = r'(?i)(TERM|QUEST|RPG)'
@@ -67,7 +68,7 @@ class SAdvLexer(Lexer):
     TIMES = r'(?i)TIME'
     NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'
     TAB = r'\t'
-    TIME = r'[0-9]+s'
+    TIME = r'[+-]?([0-9]*[.])?[0-9]+s'
     NUM = r'\d{1,10}'
     SPACE = r'    '
 

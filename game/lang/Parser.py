@@ -44,7 +44,6 @@ class SAdvParser(Parser):
     @_('LOOP NUM TIMES')
     def statement(self, p):
         identity = ''.join([random.choice(hexdigits) for _ in range(16)])
-        print(self.env["loop"])
         self.env["loop"][f"{identity}@{p.NUM}"] = []
 
 
@@ -144,5 +143,8 @@ class SAdvParser(Parser):
 
     @_('READFILE STRING')
     def statement(self, p):
-        print(True)
         return [("READFILE", p.STRING)]
+    
+    @_('TYPEFILE TIME STRING')
+    def statement(self, p):
+        return [("TYPEFILE", p.TIME, p.STRING)]

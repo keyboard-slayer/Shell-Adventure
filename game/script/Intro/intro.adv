@@ -3,15 +3,11 @@
 ;
 
 LOADPATH "intro"
-
-FUN eula 
-    READFILE "eula.txt"
-    WAIT 1 THEN CALL eula 
-END FUN
-
 DISABLE RPG 
 DISABLE QUEST 
 SETPOS TERM 0 0
 SETSIZE TERM 1920 1080
 
-CALL eula
+WAIT 0.1s THEN SAY "BIBI"
+
+TYPEFILE 0.5s "eula.txt"
