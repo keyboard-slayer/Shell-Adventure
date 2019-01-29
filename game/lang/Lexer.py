@@ -36,11 +36,21 @@ class SAdvLexer(Lexer):
         TIMES,
         LOADPATH,
         READFILE,
-        TYPEFILE
+        TYPEFILE,
+        TYPESTRING,
+        SETUSERNAME,
+        SETMACHINENAME,
+        TERMPART,
+        INPUT
     }
 
     ignore = '\n'
 
+    INPUT = r'(?i)INPUT'
+    TERMPART = r'(?i)(PROMPT|BASH)'
+    SETMACHINENAME = r'(?i)SETMACHINENAME'
+    SETUSERNAME = r'(?i)SETUSERNAME'
+    TYPESTRING = r'(?i)TYPESTRING'
     TYPEFILE = r'(?i)TYPEFILE'
     READFILE = r'(?i)READFILE'
     LOADPATH = r'(?i)LOADPATH'

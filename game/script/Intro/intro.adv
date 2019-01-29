@@ -3,11 +3,19 @@
 ;
 
 LOADPATH "intro"
+
+SETUSERNAME "UNDEFINED"
+SETMACHINENAME "TheShell"
+
 DISABLE RPG 
-DISABLE QUEST 
+DISABLE QUEST
+DISABLE PROMPT
+DISABLE BASH 
+
 SETPOS TERM 0 0
 SETSIZE TERM 1920 1080
 
-WAIT 0.1s THEN SAY "BIBI"
-
-TYPEFILE 0.5s "eula.txt"
+TYPESTRING 0.05s "Hey Salut étranger, Bienvenu dans le Shell ;-)"
+TYPESTRING 0.05s "Avant de commmencer, peut tu me donner ton prénom ?"
+WAIT 1s 
+SAY "YEAH"

@@ -24,6 +24,10 @@ class SAdvParser(Parser):
     def statement(self, p):
         return [('PYTHON', f'self.term.add_to_display(\"{p.STRING}\")')]
 
+    @_('SAY NAME')
+    def statement(self, p):
+        return [('PYTHON', f'self.term.add_to_display(self.variable[\"{p.NAME}\"])')]
+
     @_('OBJECTIF NAME STRING')
     def statement(self, p):
         self.obj.append(p.NAME)
@@ -40,6 +44,11 @@ class SAdvParser(Parser):
     @_('WAIT DIR STRING THEN statement')
     def statement(self, p):
         return [('WAIT', 'DIR', p.STRING, p.statement)]
+
+    @_('INPUT NAME')
+    def statement(self, p):
+        return [('INPUT', p.NAME)]
+
     
     @_('LOOP NUM TIMES')
     def statement(self, p):
@@ -47,9 +56,9 @@ class SAdvParser(Parser):
         self.env["loop"][f"{identity}@{p.NUM}"] = []
 
 
-    @_('WAIT TIME THEN statement')
+    @_('WAIT TIME')
     def statement(self, p):
-        return [('WAIT', p.TIME, p.statement)]
+        return [('WAIT', p.TIME)]
 
     @_('WAIT DELFILE STRING THEN statement')
     def statement(self, p):
@@ -129,6 +138,11 @@ class SAdvParser(Parser):
     def statement(self, p):
         return [("DISABLE", p.GAMEPART.lower())]
 
+    @_('DISABLE TERMPART')
+    def statement(self, p):
+        return [("PYTHON", f"self.term.disable_{p.TERMPART.lower()}()")]
+        
+
     @_('SETPOS GAMEPART NUM NUM')
     def statement(self, p):
         return [("PYTHON", f"self.pos[\"{p.GAMEPART.lower()}\"] = ({p.NUM0}, {p.NUM1})")]
@@ -148,3 +162,19 @@ class SAdvParser(Parser):
     @_('TYPEFILE TIME STRING')
     def statement(self, p):
         return [("TYPEFILE", p.TIME, p.STRING)]
+    
+    @_('TYPESTRING TIME STRING')
+    def statement(self, p):
+        return [("TYPESTRING", p.TIME, p.STRING)]
+
+    @_('TYPESTRING TIME NAME')
+    def statement(self, p):
+        return [("PYTHON", f"self.evaluate([(\"TYPESTRING\", \"{p.TIME}\", self.variable[\"{p.NAME}\"])])")]
+
+    @_('SETUSERNAME STRING')
+    def statement(self, p):
+        return [("PYTHON", f"self.term.set_env('USER', \"{p.STRING}\")")]
+
+    @_('SETMACHINENAME STRING')
+    def statement(self, p):
+        return [("PYTHON", f"self.term.set_env('HOST', \"{p.STRING}\")")]

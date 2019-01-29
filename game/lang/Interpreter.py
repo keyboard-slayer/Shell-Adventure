@@ -8,117 +8,101 @@ import datetime
 
 class Interpreter:
     def __init__(self, gameDir: str, term: object, quest: object, rpg: object):
-        self.term = term
-        self.quest = quest
-        self.rpg = rpg
+        self.gameDir = gameDir
+        self.term = term 
+        self.quest = quest 
+        self.rpg = rpg 
+
         self.lexer = Lexer()
         self.parser = Parser()
-        self.gameDir = gameDir
-        self.mainPath = None
-        self.string = ""
+
+
+        self.codeTree = []
+
+        self.mainPath = False 
+        self.evaluated = True
+        self.variable = {}
+
+        self.string = (0, [], 0)
+        self.timing = 0
+        self.typeBuffer = ""
+
         self.buffer = {
-            'FILE': ({}, os.path.isfile), 
-            'DIR': ({},  os.path.isdir),
-            'TIME': ({}, lambda time: datetime.datetime.now() > time),
+            'FILE': ([], os.path.isfile),
+            'DIR' : ([], os.path.isdir),
             'DELFILE': ({}, lambda fichier: not os.path.isfile(fichier)),
             'DELDIR': ({}, lambda dossier: not os.path.isdir(dossier)) 
         }
 
         self.pos = {'term': (1420, 0), 'quest': (1420, 540), 'rpg': (0, 0)}
 
-    def parse(self, command):
-        lex = self.lexer.tokenize(command)
+
+    def parse(self, line):
+        lex = self.lexer.tokenize(line)
         return self.parser.parse(lex)
 
-    def nextChar(self, time):
-        try:
-            self.term.add_to_display(next(self.string))
-            self.buffer["TIME"][0][datetime.datetime.now() + datetime.timedelta(float(time))] = [('PYTHON', f'self.nextChar(float({time[:-1]}))')]
-        except StopIteration:
-            return 1
 
     def evaluate(self, tree):
-        try:
-            for code in tree:
-                if type(code) == list:
-                    code = code[0]
-                
-                if code[0] == "PYTHON":
-                    exec(code[1])
+        for code in tree:
+            if code[0] == "PYTHON":
+                exec(code[1])
 
-                if code[0] == "REPEAT":
-                    for _ in range(int(code[1])):
-                        self.evaluate(code[2])
-                    
-                if code[0] == "WAIT":
-                    if code[1][-1] == 's':
-                        print(code[2])
-                        self.buffer['TIME'][0][datetime.datetime.now() + datetime.timedelta(0, float(code[1][:-1]))] = code[2]
-                    
-                    if code[1] in self.buffer.keys():
-                        self.buffer[code[1]][0][code[2]] = code[3]
-                
-                if code[0] == "EXIST":
-                    if os.path.isfile(code[1]) or os.path.isdir(code[1]):
-                        self.evaluate(code[2])
+            if code[0] == "DISABLE":
+                exec(f"self.{code[1]}.resize((0, 0))")
+                self.pos[code[1]] = (6666, 6666)
 
-                if code[0] == "DISABLE":
-                    exec(f"self.{code[1]}.resize((0, 0))")
-                    self.pos[code[1]] = (6666, 6666)
+            if code[0] == "TYPESTRING":
+                self.term.add_to_display(" ")
+                nextTiming = datetime.datetime.now() + datetime.timedelta(0, float(code[1][:-1]))
+                self.string = (nextTiming, code[2], float(code[1][:-1]))
+                self.evaluated = False
+            
+            if code[0] == "WAIT":
+                self.timing = datetime.datetime.now() + datetime.timedelta(0, float(code[1][:-1]))
+                self.evaluated = False
 
-                if code[0] == "SETPATH":
-                    if os.path.isdir(os.path.join(self.gameDir, code[1])):
-                        self.mainPath = code[1]
-                    else:
-                        raise Exception(f"The directory {os.path.join(self.gameDir, code[1])} is not found")
-
-                if code[0] == "READFILE":
-                    if self.mainPath is None:
-                        raise Exception("the mainPath is undefined")
-                    else:
-                        if not os.path.isfile(os.path.join(self.mainPath, code[1])):
-                            raise Exception(f"Le fichier {os.path.join(self.mainPath, code[1])} est introuvable")
-                        else:
-                            execute_and_out(f"cat {os.path.join(self.mainPath, code[1])}", self.term)
+            if code[0] == "SETPATH":
+                if os.path.isdir(os.path.join(self.gameDir, code[1])):
+                    self.mainPath = code[1]
+                else:
+                    raise Exception(f"The directory {os.path.join(self.gameDir, code[1])} is not found")
 
 
-                if code[0] == "TYPEFILE":
-                    if self.mainPath is None:
-                        raise Exception("the mainPath is undefined")
-                    else:
-                        if not os.path.isfile(os.path.join(self.mainPath, code[2])):
-                            raise Exception(f"Le fichier {os.path.join(self.mainPath, code[2])} est introuvable")
-                        else:
-                            with open(os.path.join(self.mainPath, code[2]), 'r') as file:
-                                self.string = iter(file.read())
-                                self.buffer['TIME'][0][datetime.datetime.now() + datetime.timedelta(0, float(code[1][:-1]))] = [('PYTHON', f'self.nextChar(float({code[1][:-1]}))')]
-                            
-                            
-            return 0
-        except TypeError:
-            return 1
-
-
-
-    def mainloop(self):
-        for wait in list(self.buffer.keys())[1:]:
-            loop = 0
-            check = self.buffer[wait][1]
-            while len(self.buffer[wait][0]) > loop:
-                if check(list(self.buffer[wait][0].keys())[loop]):
-                    self.evaluate(self.buffer[wait][0][list(self.buffer[wait][0].keys())[loop]])
-                    del self.buffer[wait][0][list(self.buffer[wait][0].keys())[loop]]
-                loop += 1
-
-        return list(self.pos.values())
-
-    def execute(self, file):
-        with open(f"{self.gameDir}/game/script/{file}", 'r') as script:
+    def execute(self, filename: str):
+        with open(f"{self.gameDir}/game/script/{filename}", 'r') as script:
             for line in script.readlines():
                 tree = self.parse(line)
-                self.evaluate(tree)
+                if tree is not None:
+                    self.codeTree.append(tree)
 
+    def mainloop(self):
+        if self.codeTree:
+            if self.evaluated:
+                self.evaluate(self.codeTree[0])
 
+            if self.timing and self.timing < datetime.datetime.now():
+                self.timing = 0
+                self.evaluated = True        
+            
+            if self.string[1] and self.string[0] < datetime.datetime.now():
+                self.term.removeLine()
+                self.typeBuffer += self.string[1][0]
+                nextTiming = datetime.datetime.now() + datetime.timedelta(0, self.string[2])
+                self.string = (nextTiming, self.string[1][1:], self.string[2])
+                self.term.add_to_display(self.typeBuffer)
+            
+            elif self.string[0] and not self.string[1]:
+                self.typeBuffer = ""
+                self.string = (0, [], 0)
+                self.evaluated = True
 
-    def get_tree(self):
-        return self.tree
+            if self.evaluated:    
+                self.codeTree = self.codeTree[1:]
+        
+        return list(self.pos.values())
+
+                    
+                            
+                            
+                
+        

@@ -4,11 +4,10 @@
 import os
 import subprocess
 
-# from game.mechanics.term.Nano import Nano
 
 def execute(cmd: str, term: object) -> str:
     commands = cmd.split(' && ')
-    homepath = term.getenv()["HOME"]
+    homepath = term.get_env()["HOME"]
 
     for command in commands:
         if not command.replace(' ', ''):
@@ -32,16 +31,16 @@ def execute(cmd: str, term: object) -> str:
             return ""
 
         elif command == "pwd":
-            return f"~{term.getenv()['PWD'].split(term.getenv()['HOME'])[-1]}"
+            return f"~{term.get_env()['PWD'].split(term.get_env()['HOME'])[-1]}"
 
         elif command == "philosophy":
             return execute("python -m this", term)
 
         elif command == "sayHi":
             return f"""
-     ____{(len({term.getenv()["USER"]})*9)*'_'}
-    < Hi {term.getenv()["USER"]} >
-     ------{(len({term.getenv()["USER"]})*8)*'-'}
+     ____{(len({term.get_env()["USER"]})*9)*'_'}
+    < Hi {term.get_env()["USER"]} >
+     ------{(len({term.get_env()["USER"]})*8)*'-'}
             \   ^__^
              \  (oo)\_______
                 (__)\       )\/\\
@@ -56,7 +55,7 @@ def execute(cmd: str, term: object) -> str:
                 return "Pas encore dispo"
 
             elif cmdWArg[0] == "cd":
-                pwd = term.getenv()["PWD"].split('/')
+                pwd = term.get_env()["PWD"].split('/')
                 directory = cmdWArg[1].split('/')
                 if not directory[0]:
                     return "Le chemain absolu sont interdit :p"
@@ -72,11 +71,11 @@ def execute(cmd: str, term: object) -> str:
 
                 pwd = '/'.join(pwd)
 
-                if not pwd[:len(term.getenv()["HOME"])] == term.getenv()["HOME"]:
+                if not pwd[:len(term.get_env()["HOME"])] == term.get_env()["HOME"]:
                     return "Tu ne peux pas quitter le bac à sable"
 
                 elif not os.path.isdir(pwd):
-                    return f"bash: cd: ~{pwd.split(term.getenv()['HOME'])[-1]}: Aucun fichier ou dossier de ce type"
+                    return f"bash: cd: ~{pwd.split(term.get_env()['HOME'])[-1]}: Aucun fichier ou dossier de ce type"
 
                 term.setenv("PWD", pwd)
                 os.chdir(pwd)

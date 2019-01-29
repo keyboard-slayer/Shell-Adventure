@@ -23,6 +23,10 @@ class Term:
         self.visualLine = []
         self.lineRect = None
         self.blinkRect = None
+        self.fontSurface = None
+        self.inInput = False
+        self.promptVisual = True
+        self.bash = True
         self.sessionHistory = []
         self.currentTyping = ""
         self.blinkX = 0
@@ -53,7 +57,8 @@ class Term:
             "HOME": os.path.join(os.path.join(os.environ["HOME"], ".shelladv"), username),
             "PWD": os.path.join(os.path.join(os.environ["HOME"], ".shelladv"), username),
             "USER": username,
-            "HOST": host
+            "HOST": host,
+            "LASTINPUT": ""
         }
 
         # os.chdir(self.env["HOME"])
@@ -63,12 +68,33 @@ class Term:
     def resize(self, size: Tuple[int, int]):
         self.surface = pygame.Surface(size)
 
+    def disable_prompt(self):
+        self.promptVisual = False
+    
+    def enable_prompt(self):
+        self.promptVisual = True 
+    
+    def disable_bash(self):
+        self.bash = False 
+    
+    def enable_bash(self):
+        self.bash = True
+
+    def getInput(self):
+        self.inInput = True
+    
+    def removeLine(self):
+        self.visualLine = self.visualLine[:-1]
+        
+    def collideFont(self):
+        return self.fontSurface.get_size()[0] < self.surface.get_size()[0] - 50
+
     def updatePrompt(self):
         if self.env["PWD"][:len(self.env["HOME"])] == self.env["HOME"]:
             path = f"~{self.env['PWD'].split(self.env['HOME'])[1]}"
         else:
             path = self.env["PWD"]
-
+        
         self.prompt = f"{self.env['USER']}@{self.env['HOST']} {path}: $"
 
     def add_to_display(self, output: str):
@@ -77,10 +103,10 @@ class Term:
     def clear(self):
         self.visualLine = []
 
-    def getenv(self) -> Dict[str, str]:
-        return self.env
+    def get_env(self, key: str) -> str:
+        return self.env[key]
 
-    def setenv(self, var, value):
+    def set_env(self, var, value):
         self.env[var] = value
         self.blinkX = 0
 
@@ -90,19 +116,19 @@ class Term:
 
         for lineIndex, line in enumerate(self.visualLine):
             toshow = line[1][1:] if len(line[1]) > 1 and line[1][0] == '>' else f"{line[0]} {line[1]}"
-
-            self.surface.blit(
-                self.mono.render(
+            self.fontSurface = self.mono.render(
                     toshow,
                     True,
                     (255, 255, 255)
-                ),
+                )
+            self.surface.blit(
+               self.fontSurface,
                 (0, lineIndex * 22)
             )
 
         self.lineRect = self.surface.blit(
             self.mono.render(
-                f"{self.prompt} {self.currentTyping}",
+                f"{self.prompt} {self.currentTyping}" if self.promptVisual else self.currentTyping,
                 True,
                 (255, 255, 255)
             ),
@@ -139,16 +165,20 @@ class Term:
             self.blinkX = 0
 
         elif keyName == "return":
-            self.visualLine.append((self.prompt, self.currentTyping))
-            self.history.append(self.currentTyping)
-            execute_and_out(self.currentTyping, self)
+            if self.bash and not self.inInput:
+                self.visualLine.append((self.prompt, self.currentTyping))
+                self.history.append(self.currentTyping)
+                execute_and_out(self.currentTyping, self)
+            elif self.inInput:
+                self.inInput = False
+                self.env["LASTINPUT"] = self.currentTyping
             self.currentTyping = ""
             self.blinkX = 0
 
         elif keyName == "space":
             self.currentTyping += ' '
 
-        elif keyName == "c" and pygame.key.get_mods() & pygame.KMOD_CTRL:
+        elif keyName == "c" and pygame.key.get_mods() & pygame.KMOD_CTRL and self.bash:
             self.visualLine.append((self.prompt, self.currentTyping+"^C"))
             self.currentTyping = ""
             self.blinkX = 0
