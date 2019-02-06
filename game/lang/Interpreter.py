@@ -1,10 +1,21 @@
 from game.lang.Lexer import SAdvLexer as Lexer
 from game.lang.Parser import SAdvParser as Parser
+from game.mechanics.rpg.sprite import Sprite
 
 from game.mechanics.term.executor import *
 
+from typing import Tuple
+
 import os
 import datetime
+
+def hexConvert(hexColor: str) -> Tuple[int, int, int]:
+    hexColor = hexColor[1:]
+    decimalColor = []
+    for index in range(0, 6, 2):
+        decimalColor.append(int(hexColor[index:index+2], 16))
+    return tuple(decimalColor) 
+
 
 class Interpreter:
     def __init__(self, gameDir: str, term: object, quest: object, rpg: object):
@@ -14,14 +25,13 @@ class Interpreter:
         self.rpg = rpg 
 
         self.lexer = Lexer()
-        self.parser = Parser()
+        self.parser = Parser(self.rpg)
 
 
         self.codeTree = []
 
         self.mainPath = False 
         self.evaluated = True
-        self.variable = {}
 
         self.string = (0, [], 0)
         self.timing = 0
@@ -33,15 +43,30 @@ class Interpreter:
             'DELFILE': ({}, lambda fichier: not os.path.isfile(fichier)),
             'DELDIR': ({}, lambda dossier: not os.path.isdir(dossier)) 
         }
-
+        self.spriteMove = []
+        self.sprites = {}
         self.pos = {'term': (1420, 0), 'quest': (1420, 540), 'rpg': (0, 0)}
+        self.backPos = {'term': (1420, 0), 'quest': (1420, 540), 'rpg': (0, 0)}
 
 
     def parse(self, line):
         lex = self.lexer.tokenize(line)
         return self.parser.parse(lex)
 
+    def parseString(self, string: str):
+        resultat = []
+        for index, word in enumerate(string.split(' ')):
+            if word[0] == '$':
+                varName = word[1:].replace(',', '')
+                if varName in globals():
+                    resultat.append(globals()[varname])
+                else:
+                    raise NameError(f"name {varName} is undefined")
+            else:
+                resultat.append(word)
 
+        return ' '.join(resultat)
+                   
     def evaluate(self, tree):
         for code in tree:
             if code[0] == "PYTHON":
@@ -50,11 +75,27 @@ class Interpreter:
             if code[0] == "DISABLE":
                 exec(f"self.{code[1]}.resize((0, 0))")
                 self.pos[code[1]] = (6666, 6666)
+            
+            if code[0] == "ENABLE":
+                size = "500, 540" if code[1] != "rpg" else "1420, 1080"
+                exec(f"self.{code[1]}.resize(({size}))")
+                self.pos[code[1]] = self.backPos[code[1]]
+
+            if code[0] == "INPUT":
+                if len(code) == 3:
+                    self.term.set_custom_prompt(code[2])
+                    
+                self.term.getInput()
+                self.inputVar = code[1]
+                self.evaluated = False
+
+            if code[0] == "LOADSCRIPT":
+                self.execute(code[1])
 
             if code[0] == "TYPESTRING":
                 self.term.add_to_display(" ")
                 nextTiming = datetime.datetime.now() + datetime.timedelta(0, float(code[1][:-1]))
-                self.string = (nextTiming, code[2], float(code[1][:-1]))
+                self.string = (nextTiming, self.parseString(code[2]), float(code[1][:-1]))
                 self.evaluated = False
             
             if code[0] == "WAIT":
@@ -67,6 +108,19 @@ class Interpreter:
                 else:
                     raise Exception(f"The directory {os.path.join(self.gameDir, code[1])} is not found")
 
+            if code[0] == "LOADSPRITE":
+                spriteFolder = os.path.join(self.mainPath, "sprite")
+                color = hexConvert(code[-3])
+                self.sprites[code[1]] =  Sprite(os.path.join(spriteFolder, code[2]), color, (int(code[5]), int(code[6])), code[7], (int(code[-1]), int(code[-2])))
+                self.rpg.add_to_surface(code[1], self.sprites[code[1]], (int(code[3]), int(code[4])))
+
+            if code[0] == "GO":
+                goto = ["DOWN", "RIGHT", "LEFT", "UP"].index(code[1])
+                speed = 0.5 if code[-1] == "WALK" else 0.2
+                self.spriteMove.append(
+                    [datetime.datetime.now() + datetime.timedelta(0, speed), self.sprites[code[2]], goto, int(code[3]), speed]
+                )
+
 
     def execute(self, filename: str):
         with open(f"{self.gameDir}/game/script/{filename}", 'r') as script:
@@ -76,13 +130,32 @@ class Interpreter:
                     self.codeTree.append(tree)
 
     def mainloop(self):
+        if self.spriteMove:
+            for sprite in self.spriteMove:
+                if datetime.datetime.now() > sprite[0]:
+                    if sprite[-2] > 0:
+                        sprite[1].move(sprite[2])
+                        sprite[0] = datetime.datetime.now() + datetime.timedelta(0, sprite[-1])
+                        sprite[-2] -= 1
+                        self.rpg.update()
+                    else:
+                        print("END")
+                        self.spriteMove.remove(sprite)
         if self.codeTree:
             if self.evaluated:
                 self.evaluate(self.codeTree[0])
 
             if self.timing and self.timing < datetime.datetime.now():
                 self.timing = 0
-                self.evaluated = True        
+                self.evaluated = True 
+
+            if self.term.get_env("LASTINPUT"):
+                if self.inputVar != '_':
+                    globals()[self.inputVar] = self.term.get_env("LASTINPUT")
+                
+                self.term.set_env("LASTINPUT", "")
+                self.inputVar = ""
+                self.evaluated = True
             
             if self.string[1] and self.string[0] < datetime.datetime.now():
                 self.term.removeLine()
@@ -95,14 +168,9 @@ class Interpreter:
                 self.typeBuffer = ""
                 self.string = (0, [], 0)
                 self.evaluated = True
+            
 
             if self.evaluated:    
                 self.codeTree = self.codeTree[1:]
         
         return list(self.pos.values())
-
-                    
-                            
-                            
-                
-        

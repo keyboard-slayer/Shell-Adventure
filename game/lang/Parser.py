@@ -11,18 +11,27 @@ from string import hexdigits
 class SAdvParser(Parser):
     tokens = SAdvLexer.tokens
 
-    def __init__(self):
+    def __init__(self, rpg):
         self.env = {"loop": {}}
         self.obj = []
         self.func = ""
+        self.rpg = rpg
 
     @_('', 'COMMENT')
     def statement(self, p):
         pass
 
+    @_('CLEAR')
+    def statement(self, p):
+        return [('PYTHON', 'self.term.clear()')]
+    
+    @_('LOADSCRIPT STRING')
+    def statement(self, p):
+        return [('LOADSCRIPT', p.STRING)]
+
     @_('SAY STRING')
     def statement(self, p):
-        return [('PYTHON', f'self.term.add_to_display(\"{p.STRING}\")')]
+        return [('PYTHON', f'self.term.add_to_display(self.parseString(\"{p.STRING}\"))')]
 
     @_('SAY NAME')
     def statement(self, p):
@@ -48,6 +57,10 @@ class SAdvParser(Parser):
     @_('INPUT NAME')
     def statement(self, p):
         return [('INPUT', p.NAME)]
+
+    @_('INPUT NAME STRING')
+    def statement(self, p):
+        return [('INPUT', p.NAME, p.STRING)]
 
     
     @_('LOOP NUM TIMES')
@@ -137,10 +150,18 @@ class SAdvParser(Parser):
     @_('DISABLE GAMEPART')
     def statement(self, p):
         return [("DISABLE", p.GAMEPART.lower())]
+    
+    @_('ENABLE GAMEPART')
+    def statement(self, p):
+        return [("ENABLE", p.GAMEPART.lower())]
 
     @_('DISABLE TERMPART')
     def statement(self, p):
         return [("PYTHON", f"self.term.disable_{p.TERMPART.lower()}()")]
+
+    @_('ENABLE TERMPART')
+    def statement(self, p):
+        return [("PYTHON", f"self.term.enable_{p.TERMPART.lower()}()")]
         
 
     @_('SETPOS GAMEPART NUM NUM')
@@ -175,6 +196,30 @@ class SAdvParser(Parser):
     def statement(self, p):
         return [("PYTHON", f"self.term.set_env('USER', \"{p.STRING}\")")]
 
+    @_('SETUSERNAME NAME')
+    def statement(self, p):
+        return [("PYTHON", f"self.term.set_env('USER', self.variable[\"{p.NAME}\"])")]
+
     @_('SETMACHINENAME STRING')
     def statement(self, p):
         return [("PYTHON", f"self.term.set_env('HOST', \"{p.STRING}\")")]
+    
+    @_('LOADSPRITE NAME STRING NUM NUM NUM NUM NUM HEXCOLOR NUM NUM')
+    def statement(self, p):
+        return [(
+            "LOADSPRITE",
+            p.NAME,
+            p.STRING, 
+            p.NUM0,
+            p.NUM1,
+            p.NUM2,
+            p.NUM3,
+            p.NUM4,
+            p.HEXCOLOR,
+            p.NUM5,
+            p.NUM6
+        )]
+    
+    @_('GO POS NAME NUM SPEED')
+    def statement(self, p):
+        return [("GO", p.POS, p.NAME, p.NUM, p.SPEED)]

@@ -25,7 +25,7 @@ def launchGame():
 
     lang = Interpreter(GAMEFILES, term, quest, rpg)
     # os.chdir(term.getenv()["HOME"])
-    lang.execute("Intro/intro.adv")
+    lang.execute("Intro/office.adv")
     while True:
         termPos, questPos, rpgPos = lang.mainloop()
         display.blit(term.get_surface(), termPos)

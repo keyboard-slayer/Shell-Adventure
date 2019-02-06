@@ -30,6 +30,7 @@ class Term:
         self.sessionHistory = []
         self.currentTyping = ""
         self.blinkX = 0
+        self.custom = ""
 
         if not os.path.isdir(os.path.join(os.environ["HOME"], ".shelladv")):
             os.mkdir(os.path.join(os.environ["HOME"], ".shelladv"))
@@ -74,6 +75,9 @@ class Term:
     def enable_prompt(self):
         self.promptVisual = True 
     
+    def isprompt_enabled(self) -> bool:
+        return self.promptVisual
+    
     def disable_bash(self):
         self.bash = False 
     
@@ -85,6 +89,9 @@ class Term:
     
     def removeLine(self):
         self.visualLine = self.visualLine[:-1]
+    
+    def set_custom_prompt(self, string: str):
+        self.custom = string 
         
     def collideFont(self):
         return self.fontSurface.get_size()[0] < self.surface.get_size()[0] - 50
@@ -99,6 +106,7 @@ class Term:
 
     def add_to_display(self, output: str):
         self.visualLine.append((self.prompt, f">{output}"))
+        self.blinkX = 0
 
     def clear(self):
         self.visualLine = []
@@ -125,10 +133,11 @@ class Term:
                self.fontSurface,
                 (0, lineIndex * 22)
             )
+        
 
         self.lineRect = self.surface.blit(
             self.mono.render(
-                f"{self.prompt} {self.currentTyping}" if self.promptVisual else self.currentTyping,
+                f"{self.prompt if not self.custom else self.custom} {self.currentTyping}" if self.promptVisual else self.currentTyping,
                 True,
                 (255, 255, 255)
             ),
@@ -172,6 +181,8 @@ class Term:
             elif self.inInput:
                 self.inInput = False
                 self.env["LASTINPUT"] = self.currentTyping
+            if self.custom:
+                self.custom = ""
             self.currentTyping = ""
             self.blinkX = 0
 

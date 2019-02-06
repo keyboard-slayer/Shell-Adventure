@@ -2,8 +2,6 @@
 ; Introduction Shell-Adventure
 ;
 
-LOADPATH "intro"
-
 SETUSERNAME "UNDEFINED"
 SETMACHINENAME "TheShell"
 
@@ -15,7 +13,16 @@ DISABLE BASH
 SETPOS TERM 0 0
 SETSIZE TERM 1920 1080
 
-TYPESTRING 0.05s "Hey Salut étranger, Bienvenu dans le Shell ;-)"
-TYPESTRING 0.05s "Avant de commmencer, peut tu me donner ton prénom ?"
-WAIT 1s 
-SAY "YEAH"
+TYPESTRING 0.05s "Starting Shell..."
+WAIT 2s
+CLEAR
+WAIT 0.5s
+ENABLE PROMPT 
+INPUT _ "Username: "
+DISABLE PROMPT
+TYPESTRING 0.05s "Oh, tu n'as pas de login..."
+TYPESTRING 0.05s "Laisse moi m'en occupé, rejoints moi dans mon bureau"
+CLEAR 
+WAIT 2s
+
+LOADSCRIPT "intro/office.adv"

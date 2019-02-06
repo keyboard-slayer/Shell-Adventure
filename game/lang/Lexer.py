@@ -28,6 +28,7 @@ class SAdvLexer(Lexer):
         DELDIR,
         IFEXIST,
         DISABLE,
+        ENABLE,
         GAMEPART,
         SETPOS,
         SETSIZE,
@@ -41,12 +42,25 @@ class SAdvLexer(Lexer):
         SETUSERNAME,
         SETMACHINENAME,
         TERMPART,
-        INPUT
+        INPUT,
+        CLEAR,
+        LOADSCRIPT,
+        HEXCOLOR,
+        LOADSPRITE,
+        GO,
+        POS,
+        SPEED
     }
 
     ignore = '\n'
 
+    GO = r'(?i)GO'
+    POS = r'(?i)(LEFT|RIGHT|UP|DOWN)'
+    SPEED = r'(?i)(RUN|WALK)'
+
+    CLEAR = r'(?i)CLEAR'
     INPUT = r'(?i)INPUT'
+    LOADSCRIPT = r'(?i)LOADSCRIPT'
     TERMPART = r'(?i)(PROMPT|BASH)'
     SETMACHINENAME = r'(?i)SETMACHINENAME'
     SETUSERNAME = r'(?i)SETUSERNAME'
@@ -54,8 +68,10 @@ class SAdvLexer(Lexer):
     TYPEFILE = r'(?i)TYPEFILE'
     READFILE = r'(?i)READFILE'
     LOADPATH = r'(?i)LOADPATH'
+    LOADSPRITE = r'(?i)LOADSPRITE'
     GAMEPART = r'(?i)(TERM|QUEST|RPG)'
     DISABLE = r'(?i)DISABLE'
+    ENABLE = r'(?i)ENABLE'
     SAY = r'(?i)SAY'
     DONE = r'(?i)DONE'
     OBJECTIF = r'(?i)OBJECTIF'
@@ -78,6 +94,7 @@ class SAdvLexer(Lexer):
     TIMES = r'(?i)TIME'
     NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'
     TAB = r'\t'
+    HEXCOLOR = r'#[0-9_A-F]{6}'
     TIME = r'[+-]?([0-9]*[.])?[0-9]+s'
     NUM = r'\d{1,10}'
     SPACE = r'    '

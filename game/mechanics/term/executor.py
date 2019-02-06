@@ -7,7 +7,7 @@ import subprocess
 
 def execute(cmd: str, term: object) -> str:
     commands = cmd.split(' && ')
-    homepath = term.get_env()["HOME"]
+    homepath = term.get_env("HOME")
 
     for command in commands:
         if not command.replace(' ', ''):
