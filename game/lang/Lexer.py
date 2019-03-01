@@ -49,7 +49,8 @@ class SAdvLexer(Lexer):
         LOADSPRITE,
         GO,
         POS,
-        SPEED
+        SPEED,
+        DIALOG
     }
 
     ignore = '\n'
@@ -57,6 +58,7 @@ class SAdvLexer(Lexer):
     GO = r'(?i)GO'
     POS = r'(?i)(LEFT|RIGHT|UP|DOWN)'
     SPEED = r'(?i)(RUN|WALK)'
+    DIALOG = r'(?i)DIALOG'
 
     CLEAR = r'(?i)CLEAR'
     INPUT = r'(?i)INPUT'

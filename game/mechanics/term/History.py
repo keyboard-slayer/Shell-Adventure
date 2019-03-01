@@ -10,10 +10,12 @@ class History:
             open(os.path.join(self.home, ".bash_history"), 'w').close()
         self.hist = None
 
+    def __del__(self):
+        self.hist.close()
+
     def __getitem__(self, index: int) -> str:
         self.openFile()
         return self.hist.readlines()[index][:-1]
-        self.hist.close()
 
     def append(self, line: str):
         self.openFile()

@@ -27,7 +27,6 @@ class Term:
         self.inInput = False
         self.promptVisual = True
         self.bash = True
-        self.sessionHistory = []
         self.currentTyping = ""
         self.blinkX = 0
         self.custom = ""
@@ -93,9 +92,6 @@ class Term:
     def set_custom_prompt(self, string: str):
         self.custom = string 
         
-    def collideFont(self):
-        return self.fontSurface.get_size()[0] < self.surface.get_size()[0] - 50
-
     def updatePrompt(self):
         if self.env["PWD"][:len(self.env["HOME"])] == self.env["HOME"]:
             path = f"~{self.env['PWD'].split(self.env['HOME'])[1]}"
@@ -209,6 +205,7 @@ class Term:
                 12,
                 20)
         )
+        
 
     def update(self):
         self.surface.fill((0, 0, 0))

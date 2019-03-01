@@ -204,7 +204,7 @@ class SAdvParser(Parser):
     def statement(self, p):
         return [("PYTHON", f"self.term.set_env('HOST', \"{p.STRING}\")")]
     
-    @_('LOADSPRITE NAME STRING NUM NUM NUM NUM NUM HEXCOLOR NUM NUM')
+    @_('LOADSPRITE NAME STRING NUM NUM NUM NUM NUM NUM HEXCOLOR NUM NUM')
     def statement(self, p):
         return [(
             "LOADSPRITE",
@@ -215,11 +215,16 @@ class SAdvParser(Parser):
             p.NUM2,
             p.NUM3,
             p.NUM4,
-            p.HEXCOLOR,
             p.NUM5,
-            p.NUM6
+            p.HEXCOLOR,
+            p.NUM6,
+            p.NUM7
         )]
     
     @_('GO POS NAME NUM SPEED')
     def statement(self, p):
         return [("GO", p.POS, p.NAME, p.NUM, p.SPEED)]
+
+    @_('DIALOG STRING STRING')
+    def statement(self, p):
+        return [("DIALOG", p.STRING0, p.STRING1)]

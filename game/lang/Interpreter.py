@@ -111,15 +111,27 @@ class Interpreter:
             if code[0] == "LOADSPRITE":
                 spriteFolder = os.path.join(self.mainPath, "sprite")
                 color = hexConvert(code[-3])
-                self.sprites[code[1]] =  Sprite(os.path.join(spriteFolder, code[2]), color, (int(code[5]), int(code[6])), code[7], (int(code[-1]), int(code[-2])))
-                self.rpg.add_to_surface(code[1], self.sprites[code[1]], (int(code[3]), int(code[4])))
+                self.sprites[code[1]] =  Sprite(
+                    os.path.join(spriteFolder, code[2]), 
+                    color, 
+                    (int(code[3]), int(code[4])),
+                    (int(code[5]), int(code[6])), 
+                    int(code[7]), 
+                    int(code[8]),
+                    (int(code[-1]), int(code[-2]))
+                )
+
+                self.rpg.add_to_surface(code[1], self.sprites[code[1]])
 
             if code[0] == "GO":
-                goto = ["DOWN", "RIGHT", "LEFT", "UP"].index(code[1])
+                goto = ["UP", "RIGHT", "LEFT", "DOWN"].index(code[1])
                 speed = 0.5 if code[-1] == "WALK" else 0.2
                 self.spriteMove.append(
                     [datetime.datetime.now() + datetime.timedelta(0, speed), self.sprites[code[2]], goto, int(code[3]), speed]
                 )
+
+            if code[0] == "DIALOG":
+                rpg.createDialog(code[1], code[2])
 
 
     def execute(self, filename: str):
@@ -131,16 +143,15 @@ class Interpreter:
 
     def mainloop(self):
         if self.spriteMove:
-            for sprite in self.spriteMove:
-                if datetime.datetime.now() > sprite[0]:
-                    if sprite[-2] > 0:
-                        sprite[1].move(sprite[2])
-                        sprite[0] = datetime.datetime.now() + datetime.timedelta(0, sprite[-1])
-                        sprite[-2] -= 1
-                        self.rpg.update()
-                    else:
-                        print("END")
-                        self.spriteMove.remove(sprite)
+            if datetime.datetime.now() > self.spriteMove[0][0]:
+                if self.spriteMove[0][-2] > 0:
+                    self.spriteMove[0][1].move(self.spriteMove[0][2])
+                    self.spriteMove[0][0] = datetime.datetime.now() + datetime.timedelta(0, self.spriteMove[0][-1])
+                    self.spriteMove[0][-2] -= 1
+                    self.rpg.update()
+                else:
+                    self.spriteMove[0][1].stop(self.spriteMove[0][2])
+                    self.spriteMove.remove(self.spriteMove[0])
         if self.codeTree:
             if self.evaluated:
                 self.evaluate(self.codeTree[0])
