@@ -11,7 +11,10 @@ class History:
         self.hist = None
 
     def __del__(self):
-        self.hist.close()
+        try:
+            self.hist.close()
+        except AttributeError:
+            pass
 
     def __getitem__(self, index: int) -> str:
         self.openFile()

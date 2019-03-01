@@ -9,8 +9,8 @@ DISABLE TERM
 
 SETSIZE RPG 1920 1080
 
-LOADSPRITE sci "scientist.png" 960 540 21 27 0 3  #3cff00 60 60 
+LOADSPRITE sci "sprite/scientist.png" 960 540 21 27 0 3  #3cff00 60 60 
 ; VAR - FILENAME - POSX - POSY - WIDTH - HEIGHT - INDICE SPRITE - NBR SPRITE VERTICAL - COLOR BACK - NEW WIDTH - NEW HEIGHT
 
-DIALOG "dialog-sci.png" 20 20 #3cff00 "Coucou"
+DIALOG "sprite/dialog-sci.png" 20 20 #3cff00 "Coucou"
 ; FILENAME - WIDTH - HEIGHT - COLOR - STRING
