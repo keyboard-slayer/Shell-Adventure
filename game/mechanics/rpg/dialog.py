@@ -7,7 +7,7 @@ import pygame
 from typing import Tuple
 
 class Dialog:
-    def __init__(self, icon: str, txt: str, color: Tuple[int, int, int], font=None, size=(1920, 50), pos=(0, 1030)):
+    def __init__(self, icon: str, txt: str, color: Tuple[int, int, int], font=None, size=(1920, 100), pos=(0, 925)):
         if font is None:
             font = pygame.font.Font("./font/monospace.ttf", 22)
         

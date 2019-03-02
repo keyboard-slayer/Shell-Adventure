@@ -122,7 +122,6 @@ class Interpreter:
             self.rpg.add_to_surface(code[1], self.sprites[code[1]])
 
         if code[0] == "GO":
-
             goto = ["UP", "RIGHT", "LEFT", "DOWN"].index(code[1])
             speed = 0.5 if code[-1] == "WALK" else 0.2
             self.spriteMove.append(
@@ -130,8 +129,7 @@ class Interpreter:
             )
             
         if code[0] == "DIALOG":
-            # ('DIALOG', 'dialog-sci.png', '20', '20', '#3cff00', 'Coucou')
-            self.rpg.add_to_surface('dialog', Dialog(icon=os.path.join(self.mainPath, code[1]), txt=[5], color=hexConvert(code[4])))
+            self.rpg.add_to_surface('dialog', Dialog(icon=os.path.join(self.mainPath, code[1]), txt=code[5], color=hexConvert(code[4])))
 
 
 
