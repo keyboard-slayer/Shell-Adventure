@@ -18,7 +18,7 @@ def devMenu():
     print(f"""
 *******************
 *Fichier de tests *
-*******************
+******************* 
 {header}""")
     filename = input("Tappez le nom du fichier: ")
     launch(filename)

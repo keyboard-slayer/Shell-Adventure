@@ -18,6 +18,7 @@ def launchGame():
     clock.tick(60)
     mono = pygame.font.Font("font/monospace.ttf", 22)
     display = pygame.display.set_mode((1920, 1080))
+    pygame.display.set_caption("Shell Adventure")
 
     term = Term("test-user", "localhost", (500, 540), font=mono)
     quest = Quest((500, 540), font=mono)
@@ -28,11 +29,15 @@ def launchGame():
     lang.execute("Intro/office.adv")
     while True:
         termPos, questPos, rpgPos = lang.mainloop()
-        display.blit(term.get_surface(), termPos)
+        term_rect = display.blit(term.get_surface(), termPos)
         display.blit(quest.get_surface(), questPos)
-        display.blit(rpg.get_surface(), rpgPos)
+        rpg_rect = display.blit(rpg.get_surface(), rpgPos)
         pygame.display.flip()
+        rect = pygame.Rect(pygame.mouse.get_pos(), pygame.mouse.get_cursor()[0])
+        term.set_mouse_collide(rect.colliderect(term_rect))
+        rpg.set_mouse_collide(rect.colliderect(rpg_rect))
 
         for event in pygame.event.get():
             if event.type == KEYDOWN:
                 term.keydown(event.key)
+                rpg.keydown(event.key)

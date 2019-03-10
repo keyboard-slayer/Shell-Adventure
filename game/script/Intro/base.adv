@@ -1,0 +1,8 @@
+; Pour phase de test avec collision du pointeur de la souris
+
+FUN TEST 
+	DISABLE TERM
+	DISABLE RPG
+END FUN 
+
+CALL TEST

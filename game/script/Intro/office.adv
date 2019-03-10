@@ -6,11 +6,20 @@ LOADPATH "intro"
 
 ENABLE RPG 
 DISABLE TERM
+DISABLE QUEST
 
 SETSIZE RPG 1920 1080
 
-LOADSPRITE sci "science.png" 0 0 32 32 0 #70c060 60 60 
-; SPRITENAME - FILENAME - POSX - POSY - WIDTH - HEIGHT - SPRITE NBR - COLOR - WIDTH (On Screen) - HEIGHT (On Screen)
 
-GO UP sci 10 RUN
-; POS - SPRITE NAME - STEPS - SPEED
+LOADSPRITE sci "scientist.png" 960 540 21 27 0 3  #3cff00 60 60 
+; VAR - FILENAME - POSX - POSY - WIDTH - HEIGHT - INDICE SPRITE - NBR SPRITE VERTICAL - COLOR BACK - NEW WIDTH - NEW HEIGHT
+
+DIALOG "dialog-sci.png" #3cff00 "Salutation cher élève !" TRUE
+; FILENAME - COLOR - TEXT -  BOOL
+
+GO DOWN sci 1 WALK
+
+DIALOG "dialog-sci.png" #3cff00 "Avant de commencer ta grande aventure dans le shell j'aurais besoin d'en savoir un peu plus sur toi" TRUE
+DIALOG "dialog-sci.png" #3cff00 "Comment te prénomme tu ?" TRUE
+DIALOG "dialog-sci.png" #3cff00 "Oh, tu ne sais pas où l'entrer !" TRUE 
+DIALOG "dialog-sci.png" #3cff00 "Ne craints rien tu va l'entrer dans le shell" FALSE 

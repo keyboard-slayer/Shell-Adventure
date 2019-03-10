@@ -27,10 +27,10 @@ class Term:
         self.inInput = False
         self.promptVisual = True
         self.bash = True
-        self.sessionHistory = []
         self.currentTyping = ""
         self.blinkX = 0
         self.custom = ""
+        self.mouseCollide = False
 
         if not os.path.isdir(os.path.join(os.environ["HOME"], ".shelladv")):
             os.mkdir(os.path.join(os.environ["HOME"], ".shelladv"))
@@ -84,6 +84,12 @@ class Term:
     def enable_bash(self):
         self.bash = True
 
+    def set_mouse_collide(self, isCollide: bool):
+        self.mouseCollide = isCollide
+    
+    def did_mouse_collide(self) -> bool:
+        return self.mouseCollide
+
     def getInput(self):
         self.inInput = True
     
@@ -93,9 +99,6 @@ class Term:
     def set_custom_prompt(self, string: str):
         self.custom = string 
         
-    def collideFont(self):
-        return self.fontSurface.get_size()[0] < self.surface.get_size()[0] - 50
-
     def updatePrompt(self):
         if self.env["PWD"][:len(self.env["HOME"])] == self.env["HOME"]:
             path = f"~{self.env['PWD'].split(self.env['HOME'])[1]}"
@@ -145,7 +148,10 @@ class Term:
         )
 
     def keydown(self, keycode: int):
-        keyName = pygame.key.name(keycode)
+        if self.mouseCollide:
+            keyName = pygame.key.name(keycode)
+        else:
+            keyName = ''
 
         if keyName == "<" \
             and pygame.key.get_mods() & pygame.KMOD_SHIFT:
@@ -209,16 +215,16 @@ class Term:
                 12,
                 20)
         )
+        
 
     def update(self):
         self.surface.fill((0, 0, 0))
         self.draw()
         self.updatePrompt()
-        if 0.3 < time.time() - self.tick < 0.8:
+        if 0.3 < time.time() - self.tick < 0.8 and self.mouseCollide:
             self.drawBlink()
             while self.blinkRect is None or \
-                self.lineRect.colliderect(self.blinkRect):
-
+                self.lineRect.colliderect(self.blinkRect) and self.mouseCollide:
                 self.drawBlink()
                 self.blinkX += 1
                 done = True

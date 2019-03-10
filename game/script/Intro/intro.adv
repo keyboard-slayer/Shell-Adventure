@@ -15,14 +15,14 @@ SETSIZE TERM 1920 1080
 
 TYPESTRING 0.05s "Starting Shell..."
 WAIT 2s
-CLEAR
+CLEAR TERM
 WAIT 0.5s
 ENABLE PROMPT 
 INPUT _ "Username: "
 DISABLE PROMPT
 TYPESTRING 0.05s "Oh, tu n'as pas de login..."
 TYPESTRING 0.05s "Laisse moi m'en occupé, rejoints moi dans mon bureau"
-CLEAR 
+CLEAR TERM
 WAIT 2s
 
 LOADSCRIPT "intro/office.adv"
