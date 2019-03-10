@@ -14,7 +14,12 @@ class History:
         try:
             self.hist.close()
         except AttributeError:
+<<<<<<< HEAD
             pass 
+=======
+            pass
+
+>>>>>>> bac713826a8df7038cc2f4b383c0073b459b252b
     def __getitem__(self, index: int) -> str:
         self.openFile()
         return self.hist.readlines()[index][:-1]

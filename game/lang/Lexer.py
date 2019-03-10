@@ -50,8 +50,12 @@ class SAdvLexer(Lexer):
         GO,
         POS,
         SPEED,
+<<<<<<< HEAD
         DIALOG,
         BOOL
+=======
+        DIALOG
+>>>>>>> bac713826a8df7038cc2f4b383c0073b459b252b
     }
 
     ignore = '\n'

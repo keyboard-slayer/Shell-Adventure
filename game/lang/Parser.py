@@ -23,7 +23,11 @@ class SAdvParser(Parser):
 
     @_('CLEAR GAMEPART')
     def statement(self, p):
+<<<<<<< HEAD
         return ('PYTHON', f'self.{p.GAMEPART.lower()}.clear()')
+=======
+        return ('PYTHON', 'self.term.clear()')
+>>>>>>> bac713826a8df7038cc2f4b383c0073b459b252b
     
     @_('LOADSCRIPT STRING')
     def statement(self, p):
@@ -65,7 +69,7 @@ class SAdvParser(Parser):
     
     @_('LOOP NUM TIMES')
     def statement(self, p):
-        identity = ''.join([random.choice(hexdigits) for _ in range(16)])
+        identity = ''.join([random.choice(hexdigits)] for _ in range(16))
         self.env["loop"][f"{identity}@{p.NUM}"] = []
 
 
@@ -225,6 +229,7 @@ class SAdvParser(Parser):
     def statement(self, p):
         return ("GO", p.POS, p.NAME, p.NUM, p.SPEED)
 
+<<<<<<< HEAD
     @_('DIALOG STRING HEXCOLOR STRING BOOL')
     def statement(self, p):
         return ("DIALOG", p.STRING0, p.HEXCOLOR, p.STRING1, p.BOOL)
@@ -232,3 +237,8 @@ class SAdvParser(Parser):
     @_('WAIT END DIALOG THEN statement')
     def statement(self, p):
         return ("PYTHON", f"self.end_dialog.append({p.statement})")
+=======
+    @_('DIALOG STRING NUM NUM HEXCOLOR STRING')
+    def statement(self, p):
+        return ("DIALOG", p.STRING0, p.NUM0, p.NUM1, p.HEXCOLOR, p.STRING1)
+>>>>>>> bac713826a8df7038cc2f4b383c0073b459b252b
