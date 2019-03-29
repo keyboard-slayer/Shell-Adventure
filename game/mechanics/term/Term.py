@@ -122,7 +122,7 @@ class Term:
         self.blinkX = 0
 
     def draw(self):
-        if len(self.visualLine) * 22 >= self.surface.get_size()[1] - 175:
+        if len(self.visualLine) * 22 >= self.surface.get_size()[1] - 75:
                 self.visualLine = self.visualLine[1:]
 
         for lineIndex, line in enumerate(self.visualLine):
@@ -132,20 +132,26 @@ class Term:
                     True,
                     (255, 255, 255)
                 )
+            
             self.surface.blit(
                self.fontSurface,
                 (0, lineIndex * 22)
             )
         
 
+        
+            
         self.lineRect = self.surface.blit(
             self.mono.render(
                 f"{self.prompt if not self.custom else self.custom} {self.currentTyping}" if self.promptVisual else self.currentTyping,
-                True,
+                False,
                 (255, 255, 255)
             ),
             (0, len(self.visualLine) * 22)
+
         )
+        if self.lineRect.x+self.lineRect.width > self.surface.get_width() - 10:
+            print(True)
 
     def keydown(self, keycode: int):
         if self.mouseCollide:

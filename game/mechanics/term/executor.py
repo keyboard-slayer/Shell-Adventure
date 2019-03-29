@@ -109,9 +109,9 @@ def file_and_out(filename: str, term:object):
             print(f"eof: {eof} cat: {cat}")
             print(line.encode("utf-8"))
             eof = line == "EOF"
-        
+
             if line[:-1] == "cat << EOF" and not cat:
-                cat = True 
+                cat = True
                 continue
 
             if not cat:
@@ -119,10 +119,9 @@ def file_and_out(filename: str, term:object):
             elif not eof and cat:
                 writeBuffer.append(line)
             if eof and cat:
-                cat = False 
-                eof = False 
+                cat = False
+                eof = False
                 print(True)
                 for towrite in writeBuffer:
                     execute_and_out(f"echo {towrite}", term)
                 writeBuffer = []
-

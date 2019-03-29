@@ -9,10 +9,11 @@ from game.mechanics.term.Term import Term
 from game.mechanics.quest.Quest import Quest
 from game.mechanics.rpg.Rpg import Rpg
 from game.lang.Interpreter import Interpreter
+from game.lang.ide import Ide
 
 GAMEFILES = os.getcwd()
 
-def launchGame():
+def launchGame(liveMode=False):
     pygame.init()
     clock = pygame.time.Clock()
     clock.tick(60)
@@ -26,7 +27,14 @@ def launchGame():
 
     lang = Interpreter(GAMEFILES, term, quest, rpg)
     # os.chdir(term.getenv()["HOME"])
-    lang.execute("Intro/office.adv")
+    
+    if not liveMode:
+        lang.execute("Intro/base.adv")
+    else:
+        ide = Ide()
+        ide.mainloop()
+    
+    
     while True:
         termPos, questPos, rpgPos = lang.mainloop()
         term_rect = display.blit(term.get_surface(), termPos)

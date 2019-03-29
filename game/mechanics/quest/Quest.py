@@ -26,6 +26,9 @@ class Quest:
         else:
             self.quests[questVar] = f'>{self.quests[questVar]}'
 
+    def clear(self):
+        self.quests = {}
+
     def update(self):
         mark = False
         self.surface.fill((40, 43, 51))
@@ -44,13 +47,14 @@ class Quest:
             )
 
             if mark:
+                print(mark)
                 self.surface.blit(
                     self.mono.render(
                         'OK',
                         True,
                         (0, 255, 0)
                     ),
-                    (self.surface.get_size()[0]-50, index*22+50)
+                    (self.surface.get_size()[0]-100, index*22+50)
                 )
 
                 mark = False

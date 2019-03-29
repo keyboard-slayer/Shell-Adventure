@@ -33,7 +33,7 @@ class SAdvLexer(Lexer):
         SETPOS,
         SETSIZE,
         NUM,
-        LOOP, 
+        LOOP,
         TIMES,
         LOADPATH,
         READFILE,
@@ -51,7 +51,8 @@ class SAdvLexer(Lexer):
         POS,
         SPEED,
         DIALOG,
-        BOOL
+        BOOL,
+        OUTPUT
     }
 
     ignore = '\n'
@@ -101,7 +102,8 @@ class SAdvLexer(Lexer):
     HEXCOLOR = r'#[0-9_A-F]{6}'
     TIME = r'[+-]?([0-9]*[.])?[0-9]+s'
     NUM = r'\d{1,10}'
-    SPACE = r'    '
+    SPACE = r'  '
+    OUTPUT = r'(?i)OUTPUT'
 
 
     ignore_newline = r'\n'

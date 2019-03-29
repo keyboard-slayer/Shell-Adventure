@@ -15,15 +15,15 @@ def hexConvert(hexColor: str) -> Tuple[int, int, int]:
     decimalColor = []
     for index in range(0, 6, 2):
         decimalColor.append(int(hexColor[index:index+2], 16))
-    return tuple(decimalColor) 
+    return tuple(decimalColor)
 
 
 class Interpreter:
     def __init__(self, gameDir: str, term: object, quest: object, rpg: object):
         self.gameDir = gameDir
-        self.term = term 
-        self.quest = quest 
-        self.rpg = rpg 
+        self.term = term
+        self.quest = quest
+        self.rpg = rpg
 
         self.lexer = Lexer()
         self.parser = Parser(self.rpg)
@@ -31,7 +31,7 @@ class Interpreter:
 
         self.codeTree = []
 
-        self.mainPath = False 
+        self.mainPath = False
         self.evaluated = True
 
         self.string = (0, [], 0)
@@ -42,7 +42,7 @@ class Interpreter:
             'FILE': ([], os.path.isfile),
             'DIR' : ([], os.path.isdir),
             'DELFILE': ({}, lambda fichier: not os.path.isfile(fichier)),
-            'DELDIR': ({}, lambda dossier: not os.path.isdir(dossier)) 
+            'DELDIR': ({}, lambda dossier: not os.path.isdir(dossier))
         }
 
 
@@ -60,37 +60,35 @@ class Interpreter:
 
     def parseString(self, string: str):
         resultat = []
-        for index, word in enumerate(string.split(' ')):
+        for word in [txt for txt in string.split(' ') if txt]:
             if word[0] == '$':
                 varName = word[1:].replace(',', '')
                 if varName in globals():
-                    resultat.append(globals()[varname])
+                    resultat.append(globals()[varName])
                 else:
                     raise NameError(f"name {varName} is undefined")
             else:
                 resultat.append(word)
 
         return ' '.join(resultat)
-                   
+
     def evaluate(self, code):
         if code[0] == "PYTHON":
             exec(code[1])
-            
+
         if code[0] == "DISABLE":
-            print(True)
             exec(f"self.{code[1]}.resize((0, 0))")
             self.pos[code[1]] = (6666, 6666)
-        
+
         if code[0] == "ENABLE":
             size = "500, 540" if code[1] != "rpg" else "1420, 1080"
-            print(code[1])
             exec(f"self.{code[1]}.resize(({size}))")
             self.pos[code[1]] = self.backPos[code[1]]
 
         if code[0] == "INPUT":
             if len(code) == 3:
-                self.term.set_custom_prompt(code[2])
-                
+                self.term.set_custom_prompt(self.parseString(code[2]))
+
             self.term.getInput()
             self.inputVar = code[1]
             self.evaluated = False
@@ -98,12 +96,17 @@ class Interpreter:
         if code[0] == "LOADSCRIPT":
             self.execute(code[1])
 
+        if code[0] == "REPEAT":
+            for _ in range(int(code[1])):
+                for statement in code[2]:
+                    self.evaluate(statement)
+
         if code[0] == "TYPESTRING":
             self.term.add_to_display(" ")
             nextTiming = datetime.datetime.now() + datetime.timedelta(0, float(code[1][:-1]))
             self.string = (nextTiming, self.parseString(code[2]), float(code[1][:-1]))
             self.evaluated = False
-        
+
         if code[0] == "WAIT":
             self.timing = datetime.datetime.now() + datetime.timedelta(0, float(code[1][:-1]))
             self.evaluated = False
@@ -118,11 +121,11 @@ class Interpreter:
             spriteFolder = os.path.join(self.mainPath, "sprite")
             color = hexConvert(code[-3])
             self.sprites[code[1]] =  Sprite(
-                os.path.join(spriteFolder, code[2]), 
-                color, 
+                os.path.join(spriteFolder, code[2]),
+                color,
                 (int(code[3]), int(code[4])),
-                (int(code[5]), int(code[6])), 
-                int(code[7]), 
+                (int(code[5]), int(code[6])),
+                int(code[7]),
                 int(code[8]),
                 (int(code[-1]), int(code[-2]))
             )
@@ -159,7 +162,7 @@ class Interpreter:
             if not "dialog" in self.rpg.in_surface():
                 self.rpg.add_to_surface("dialog", self.dialog_buffer[0])
                 self.dialog_buffer = self.dialog_buffer[1:]
-        
+
         if not self.dialog_buffer and self.end_dialog and not "dialog" in self.rpg.in_surface():
             self.evaluate(self.end_dialog[0])
             self.end_dialog = self.end_dialog[1:]
@@ -175,37 +178,41 @@ class Interpreter:
                     self.spriteMove[0][1].stop(self.spriteMove[0][2])
                     self.spriteMove.remove(self.spriteMove[0])
 
-        
+
         if self.string[1] and self.string[0] < datetime.datetime.now():
             self.term.removeLine()
             self.typeBuffer += self.string[1][0]
             nextTiming = datetime.datetime.now() + datetime.timedelta(0, self.string[2])
             self.string = (nextTiming, self.string[1][1:], self.string[2])
             self.term.add_to_display(self.typeBuffer)
-            
+
         if self.codeTree:
             if self.evaluated:
-                self.evaluate(self.codeTree[0])
+                if type(self.codeTree[0]) == tuple:
+                    self.evaluate(self.codeTree[0])
+                else:
+                    for code in self.codeTree[0]:
+                        self.evaluate(code)
 
             if self.timing and self.timing < datetime.datetime.now():
                 self.timing = 0
-                self.evaluated = True 
+                self.evaluated = True
 
             if self.term.get_env("LASTINPUT"):
                 if self.inputVar != '_':
                     globals()[self.inputVar] = self.term.get_env("LASTINPUT")
-                
+
                 self.term.set_env("LASTINPUT", "")
                 self.inputVar = ""
                 self.evaluated = True
-            
+
             elif self.string[0] and not self.string[1]:
                 self.typeBuffer = ""
                 self.string = (0, [], 0)
                 self.evaluated = True
-            
 
-            if self.evaluated:    
+
+            if self.evaluated:
                 self.codeTree = self.codeTree[1:]
-        
+
         return list(self.pos.values())
