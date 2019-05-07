@@ -6,6 +6,7 @@ import pygame
 
 from typing import Tuple
 
+
 class Quest:
     def __init__(self, size: Tuple[int, int], font: pygame.font.Font):
         self.surface = pygame.Surface(size)
@@ -58,7 +59,6 @@ class Quest:
                 )
 
                 mark = False
-
 
     def get_surface(self):
         self.update()

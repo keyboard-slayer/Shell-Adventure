@@ -3,6 +3,7 @@
 
 from sly import Lexer
 
+
 class SAdvLexer(Lexer):
     tokens = {
         COMMENT,
@@ -104,7 +105,6 @@ class SAdvLexer(Lexer):
     NUM = r'\d{1,10}'
     SPACE = r'  '
     OUTPUT = r'(?i)OUTPUT'
-
 
     ignore_newline = r'\n'
 

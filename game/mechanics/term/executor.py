@@ -36,18 +36,6 @@ def execute(cmd: str, term: object) -> str:
         elif command == "philosophy":
             return execute("python -m this", term)
 
-        elif command == "sayHi":
-            return f"""
-     ____{(len({term.get_env()["USER"]})*9)*'_'}
-    < Hi {term.get_env()["USER"]} >
-     ------{(len({term.get_env()["USER"]})*8)*'-'}
-            \   ^__^
-             \  (oo)\_______
-                (__)\       )\/\\
-                    ||----w |
-                    ||     ||
-    """
-
         else:
             cmdWArg = command.split(' ')
 
@@ -68,7 +56,6 @@ def execute(cmd: str, term: object) -> str:
                     else:
                         pwd.append(dir)
 
-
                 pwd = '/'.join(pwd)
 
                 if not pwd[:len(term.get_env()["HOME"])] == term.get_env()["HOME"]:
@@ -82,8 +69,10 @@ def execute(cmd: str, term: object) -> str:
 
             else:
                 try:
-                    out = subprocess.Popen(filter(None, cmdWArg),\
-                            stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+                    out = subprocess.Popen(
+                        filter(None, cmdWArg),
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE).communicate()
 
                     output = out[1].decode("utf-8") if out[1] else out[0].decode("utf-8")
 
@@ -99,6 +88,7 @@ def execute_and_out(cmd: str, term: object):
     if result:
         for out in [word for word in result.split('\n') if word]:
             term.add_to_display(out)
+
 
 def file_and_out(filename: str, term:object):
     with open(filename, 'r') as bash:

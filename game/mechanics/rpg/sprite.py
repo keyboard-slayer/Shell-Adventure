@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pygame 
+import pygame
 
-from typing import Tuple 
+from typing import Tuple
+
 
 class Sprite:
     def __init__(self, imgFile: str, color: Tuple[int, int, int], pos: Tuple[int, int], size: Tuple[int, int], nbr: int, limitSprite: int, finalSize: Tuple[int, int]):
@@ -11,16 +12,16 @@ class Sprite:
         self.finalSize = finalSize
         self.pos = pos
         self.limitSprite = limitSprite
-        self.index = (0, 0) # X Y (Max (4, 4))
+        self.index = (0, 0)  # X Y (Max (4, 4))
         try:
             self.spriteSurface = pygame.Surface(size, pygame.SRCALPHA)
             self.spriteSurface.set_alpha(255)
             self.spriteSheet = pygame.image.load(imgFile).convert()
         except pygame.error:
             raise Exception(f"Image {imgFile} not found")
-        
+
         self.spriteSheet.set_colorkey(color)
-    
+
     def get_pos(self) -> Tuple[int, int]:
         return self.pos
 
@@ -42,5 +43,3 @@ class Sprite:
 
     def stop(self, way: int):
         self.index = (0, way)
-
-

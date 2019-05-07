@@ -9,11 +9,11 @@ from game.mechanics.term.Term import Term
 from game.mechanics.quest.Quest import Quest
 from game.mechanics.rpg.Rpg import Rpg
 from game.lang.Interpreter import Interpreter
-from game.lang.ide import Ide
 
 GAMEFILES = os.getcwd()
 
-def launchGame(liveMode=False):
+
+def launch_game():
     pygame.init()
     clock = pygame.time.Clock()
     clock.tick(60)
@@ -27,21 +27,18 @@ def launchGame(liveMode=False):
 
     lang = Interpreter(GAMEFILES, term, quest, rpg)
     # os.chdir(term.getenv()["HOME"])
-    
-    if not liveMode:
-        lang.execute("Intro/base.adv")
-    else:
-        ide = Ide()
-        ide.mainloop()
-    
-    
+
+    lang.execute("Intro/base.adv")
+
     while True:
         termPos, questPos, rpgPos = lang.mainloop()
+        mousepos = pygame.mouse.get_pos()
+
         term_rect = display.blit(term.get_surface(), termPos)
         display.blit(quest.get_surface(), questPos)
         rpg_rect = display.blit(rpg.get_surface(), rpgPos)
         pygame.display.flip()
-        rect = pygame.Rect(pygame.mouse.get_pos(), pygame.mouse.get_cursor()[0])
+        rect = pygame.Rect(mousepos, pygame.mouse.get_cursor()[0])
         term.set_mouse_collide(rect.colliderect(term_rect))
         rpg.set_mouse_collide(rect.colliderect(rpg_rect))
 

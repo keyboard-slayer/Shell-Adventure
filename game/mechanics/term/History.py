@@ -3,6 +3,7 @@
 
 import os
 
+
 class History:
     def __init__(self, home: str):
         self.home = home
@@ -14,7 +15,8 @@ class History:
         try:
             self.hist.close()
         except AttributeError:
-            pass 
+            pass
+
     def __getitem__(self, index: int) -> str:
         self.openFile()
         return self.hist.readlines()[index][:-1]
@@ -23,7 +25,6 @@ class History:
         self.openFile()
         self.hist.write(f"{line}\n")
         self.hist.close()
-
 
     def openFile(self):
         self.hist = open(os.path.join(self.home, ".bash_history"), 'a+')

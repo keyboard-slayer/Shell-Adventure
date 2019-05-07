@@ -15,7 +15,6 @@ from game.mechanics.term.executor import execute_and_out
 from game.mechanics.term.History import History
 
 
-
 class Term:
     def __init__(self, username: str, host: str, size: Tuple[int, int], font: pygame.font.Font):
         self.surface = pygame.Surface(size)
@@ -38,21 +37,20 @@ class Term:
         if not os.path.isdir(
             os.path.join(
                 os.path.join(os.environ["HOME"], ".shelladv"),
-            username)
+                username)
         ):
 
             os.mkdir(
                 os.path.join(
                     os.path.join(os.environ["HOME"], ".shelladv"),
-                username)
+                    username)
             )
 
         self.history = History(
             os.path.join(
                 os.path.join(os.environ["HOME"], ".shelladv"),
-            username)
+                username)
         )
-
 
         self.env = {
             "HOME": os.path.join(os.path.join(os.environ["HOME"], ".shelladv"), username),
@@ -71,40 +69,40 @@ class Term:
 
     def disable_prompt(self):
         self.promptVisual = False
-    
+
     def enable_prompt(self):
-        self.promptVisual = True 
-    
+        self.promptVisual = True
+
     def isprompt_enabled(self) -> bool:
         return self.promptVisual
-    
+
     def disable_bash(self):
-        self.bash = False 
-    
+        self.bash = False
+
     def enable_bash(self):
         self.bash = True
 
     def set_mouse_collide(self, isCollide: bool):
         self.mouseCollide = isCollide
-    
+
     def did_mouse_collide(self) -> bool:
         return self.mouseCollide
 
     def getInput(self):
         self.inInput = True
-    
+
     def removeLine(self):
         self.visualLine = self.visualLine[:-1]
-    
+
     def set_custom_prompt(self, string: str):
-        self.custom = string 
-        
+        self.custom = string
+
     def updatePrompt(self):
         if self.env["PWD"][:len(self.env["HOME"])] == self.env["HOME"]:
             path = f"~{self.env['PWD'].split(self.env['HOME'])[1]}"
         else:
             path = self.env["PWD"]
-        
+
         self.prompt = f"{self.env['USER']}@{self.env['HOST']} {path}: $"
 
     def add_to_display(self, output: str):
@@ -132,18 +130,16 @@ class Term:
                     True,
                     (255, 255, 255)
                 )
-            
+
             self.surface.blit(
-               self.fontSurface,
+                self.fontSurface,
                 (0, lineIndex * 22)
             )
-        
 
-        
-            
         self.lineRect = self.surface.blit(
             self.mono.render(
-                f"{self.prompt if not self.custom else self.custom} {self.currentTyping}" if self.promptVisual else self.currentTyping,
+                f"{self.prompt if not self.custom else self.custom} {self.currentTyping}"
+                if self.promptVisual else self.currentTyping,
                 False,
                 (255, 255, 255)
             ),
@@ -159,24 +155,20 @@ class Term:
         else:
             keyName = ''
 
-        if keyName == "<" \
-            and pygame.key.get_mods() & pygame.KMOD_SHIFT:
+        if keyName == "<" and pygame.key.get_mods() & pygame.KMOD_SHIFT:
                 self.currentTyping += '>'
 
         elif keyName == "&" and pygame.key.get_mods() & pygame.KMOD_MODE:
             self.currentTyping += '|'
 
-        elif keyName == "[.]" or keyName == ';'\
-            and pygame.key.get_mods() & pygame.KMOD_SHIFT:
+        elif keyName == "[.]" or keyName == ';' and pygame.key.get_mods() & pygame.KMOD_SHIFT:
                 self.currentTyping += '.'
 
-        elif keyName == "[/]" or keyName == ':'\
-            and pygame.key.get_mods() & pygame.KMOD_SHIFT:
+        elif keyName == "[/]" or keyName == ':' and pygame.key.get_mods() & pygame.KMOD_SHIFT:
                 self.currentTyping += '/'
 
         elif keyName == "-" and pygame.key.get_mods() & pygame.KMOD_SHIFT:
             self.currentTyping += '_'
-
 
         elif keyName == "[-]":
             self.currentTyping += '-'
@@ -221,7 +213,6 @@ class Term:
                 12,
                 20)
         )
-        
 
     def update(self):
         self.surface.fill((0, 0, 0))
@@ -229,8 +220,7 @@ class Term:
         self.updatePrompt()
         if 0.3 < time.time() - self.tick < 0.8 and self.mouseCollide:
             self.drawBlink()
-            while self.blinkRect is None or \
-                self.lineRect.colliderect(self.blinkRect) and self.mouseCollide:
+            while self.blinkRect is None or self.lineRect.colliderect(self.blinkRect) and self.mouseCollide:
                 self.drawBlink()
                 self.blinkX += 1
                 done = True

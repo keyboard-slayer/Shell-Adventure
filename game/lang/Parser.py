@@ -8,6 +8,7 @@ from sly import Parser
 from game.lang.Lexer import SAdvLexer
 from string import hexdigits
 
+
 class SAdvParser(Parser):
     tokens = SAdvLexer.tokens
 
@@ -17,11 +18,11 @@ class SAdvParser(Parser):
         self.func = ""
         self.rpg = rpg
 
-    @_('', 'COMMENT') # DONE
+    @_('', 'COMMENT')  # DONE
     def statement(self, p):
         pass
 
-    @_('CLEAR GAMEPART') # TESTED TODO
+    @_('CLEAR GAMEPART')  # TESTED TODO
     def statement(self, p):
         return ('PYTHON', f'self.{p.GAMEPART.lower()}.clear()')
 
@@ -29,71 +30,69 @@ class SAdvParser(Parser):
     def statement(self, p):
         return ('LOADSCRIPT', p.STRING)
 
-    @_('SAY STRING') # DONE
+    @_('SAY STRING')  # DONE
     def statement(self, p):
         return ('PYTHON', f'self.term.add_to_display(self.parseString(\"{p.STRING}\"))')
 
-    @_('SAY NAME') # DONE
+    @_('SAY NAME')  # DONE
     def statement(self, p):
         return ('PYTHON', f'self.term.add_to_display(globals()[\"{p.NAME}\"])')
 
-    @_('OBJECTIF NAME STRING') # TESTED TODO
+    @_('OBJECTIF NAME STRING')  # TESTED TODO
     def statement(self, p):
         self.obj.append(p.NAME)
         return ('PYTHON', f'self.quest.add(\"{p.NAME}\", \"{p.STRING}\")')
 
-    @_('DONE NAME') # TESTED TODO
+    @_('DONE NAME')  # TESTED TODO
     def statement(self, p):
         return ('PYTHON', f'self.quest.done(\"{p.NAME}\")')
 
-    @_('WAIT FILE STRING THEN statement') # DONE
+    @_('WAIT FILE STRING THEN statement')  # DONE
     def statement(self, p):
         return ('WAIT', 'FILE', p.STRING, p.statement)
 
-    @_('WAIT DIR STRING THEN statement') # DONE
+    @_('WAIT DIR STRING THEN statement')  # DONE
     def statement(self, p):
         return ('WAIT', 'DIR', p.STRING, p.statement)
 
-    @_('INPUT NAME') # DONE
+    @_('INPUT NAME')  # DONE
     def statement(self, p):
         return ('INPUT', p.NAME)
 
-    @_('INPUT NAME STRING') # DONE
+    @_('INPUT NAME STRING')  # DONE
     def statement(self, p):
         return ('INPUT', p.NAME, p.STRING)
 
-
-    @_('LOOP NUM TIMES') # TESTED TODO
+    @_('LOOP NUM TIMES')  # TESTED TODO
     def statement(self, p):
         identity = ''.join([random.choice(hexdigits) for _ in range(16)])
         self.env["loop"][f"{identity}@{p.NUM}"] = []
 
-
-    @_('WAIT TIME') # DONE
+    @_('WAIT TIME')  # DONE
     def statement(self, p):
         return ('WAIT', p.TIME)
 
-    @_('WAIT DELFILE STRING THEN statement') # DONE
+    @_('WAIT DELFILE STRING THEN statement')  # DONE
     def statement(self, p):
         return ('WAIT', 'DELFILE', p.STRING, p.statement)
 
-    @_('WAIT DELDIR STRING THEN statement') # DONE
+    @_('WAIT DELDIR STRING THEN statement')  # DONE
     def statement(self, p):
         return ('WAIT', 'DELDIR', p.STRING, p.statement)
 
-    @_('EXIT') # TESTED TODO
+    @_('EXIT')  # TESTED TODO
     def statement(self, p):
         return ('PYTHON', 'exit()')
 
-    @_('EXEC STRING') # TESTED TODO
+    @_('EXEC STRING')  # TESTED TODO
     def statement(self, p):
         return ("PYTHON", f'execute_and_out(\"{p.STRING}\", self.term)')
 
-    @_('RUN STRING') # TESTED TODO
+    @_('RUN STRING')  # TESTED TODO
     def statement(self, p):
         return ("PYTHON", f'file_and_out(self.gameDir+\"/game/script/{p.STRING}\", self.term)')
 
-    @_('FUN NAME') # TESTED TODO
+    @_('FUN NAME')  # TESTED TODO
     def statement(self, p):
         if not self.func:
             self.env[p.NAME] = []
@@ -102,19 +101,19 @@ class SAdvParser(Parser):
         else:
             raise Exception("Doesn't work like that :(")
 
-    @_('CALL NAME') # TESTED TODO
+    @_('CALL NAME')  # TESTED TODO
     def statement(self, p):
         return self.env[p.NAME]
 
-    @_('TAB statement') # TESTED 
+    @_('TAB statement')  # TESTED
     def statement(self, p):
         if self.func:
             self.env[self.func].append(p.statement)
 
         else:
-           raise IndentationError("unexpected indent")
+            raise IndentationError("unexpected indent")
 
-    @_('SPACE statement') # TESTED
+    @_('SPACE statement')  # TESTED
     def statement(self, p):
         if self.func:
             self.env[self.func].append(p.statement)
@@ -124,16 +123,16 @@ class SAdvParser(Parser):
                 self.env["loop"][list(self.env["loop"].keys())[-1]].append(p.statement)
 
         else:
-           raise IndentationError("unexpected indent")
+            raise IndentationError("unexpected indent")
 
-    @_('END FUN') # TESTED TODO
+    @_('END FUN')  # TESTED TODO
     def statement(self, p):
         if not self.func:
             raise SyntaxError()
         else:
             self.func = ""
 
-    @_('END LOOP') # TODO Google docs
+    @_('END LOOP')  # TODO Google docs
     def statement(self, p):
         print("OK")
         if not self.env["loop"]:
@@ -164,7 +163,6 @@ class SAdvParser(Parser):
     def statement(self, p):
         return ("PYTHON", f"self.term.enable_{p.TERMPART.lower()}()")
 
-
     @_('SETPOS GAMEPART NUM NUM')
     def statement(self, p):
         return ("PYTHON", f"self.pos[\"{p.GAMEPART.lower()}\"] = ({p.NUM0}, {p.NUM1})")
@@ -176,14 +174,6 @@ class SAdvParser(Parser):
     @_('LOADPATH STRING')
     def statement(self, p):
         return ("SETPATH", p.STRING)
-
-    #@_('READFILE STRING')
-    #def statement(self, p):
-    #    return ("READFILE", p.STRING)
-
-    #@_('TYPEFILE TIME STRING')
-    #def statement(self, p):                                                                NOTE: Maybe useless
-    #    return ("TYPEFILE", p.TIME, p.STRING)
 
     @_('TYPESTRING TIME STRING')
     def statement(self, p):
@@ -230,6 +220,6 @@ class SAdvParser(Parser):
     def statement(self, p):
         return ("DIALOG", p.STRING0, p.HEXCOLOR, p.STRING1, p.BOOL)
 
-    @_('WAIT END DIALOG THEN statement') # DONE
+    @_('WAIT END DIALOG THEN statement')  # DONE
     def statement(self, p):
         return ("PYTHON", f"self.end_dialog.append({p.statement})")

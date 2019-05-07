@@ -10,7 +10,8 @@ from typing import Tuple
 import os
 import datetime
 
-def hexConvert(hexColor: str) -> Tuple[int, int, int]:
+
+def hex_convert(hexColor: str) -> Tuple[int, int, int]:
     hexColor = hexColor[1:]
     decimalColor = []
     for index in range(0, 6, 2):
@@ -28,7 +29,6 @@ class Interpreter:
         self.lexer = Lexer()
         self.parser = Parser(self.rpg)
 
-
         self.codeTree = []
 
         self.mainPath = False
@@ -40,11 +40,10 @@ class Interpreter:
 
         self.buffer = {
             'FILE': ([], os.path.isfile),
-            'DIR' : ([], os.path.isdir),
+            'DIR': ([], os.path.isdir),
             'DELFILE': ({}, lambda fichier: not os.path.isfile(fichier)),
             'DELDIR': ({}, lambda dossier: not os.path.isdir(dossier))
         }
-
 
         self.dialog_buffer = []
         self.end_dialog = []
@@ -53,12 +52,11 @@ class Interpreter:
         self.pos = {'term': (1420, 0), 'quest': (1420, 540), 'rpg': (0, 0)}
         self.backPos = {'term': (1420, 0), 'quest': (1420, 540), 'rpg': (0, 0)}
 
-
     def parse(self, line):
         lex = self.lexer.tokenize(line)
         return self.parser.parse(lex)
 
-    def parseString(self, string: str):
+    def parse_string(self, string: str):
         resultat = []
         for word in [txt for txt in string.split(' ') if txt]:
             if word[0] == '$':
@@ -87,7 +85,7 @@ class Interpreter:
 
         if code[0] == "INPUT":
             if len(code) == 3:
-                self.term.set_custom_prompt(self.parseString(code[2]))
+                self.term.set_custom_prompt(self.parse_string(code[2]))
 
             self.term.getInput()
             self.inputVar = code[1]
@@ -103,8 +101,9 @@ class Interpreter:
 
         if code[0] == "TYPESTRING":
             self.term.add_to_display(" ")
-            nextTiming = datetime.datetime.now() + datetime.timedelta(0, float(code[1][:-1]))
-            self.string = (nextTiming, self.parseString(code[2]), float(code[1][:-1]))
+            current_timing = datetime.datetime.now()
+            nextTiming = current_timing + datetime.timedelta(0, float(code[1][:-1]))
+            self.string = (nextTiming, self.parse_string(code[2]), float(code[1][:-1]))
             self.evaluated = False
 
         if code[0] == "WAIT":
@@ -119,8 +118,8 @@ class Interpreter:
 
         if code[0] == "LOADSPRITE":
             spriteFolder = os.path.join(self.mainPath, "sprite")
-            color = hexConvert(code[-3])
-            self.sprites[code[1]] =  Sprite(
+            color = hex_convert(code[-3])
+            self.sprites[code[1]] = Sprite(
                 os.path.join(spriteFolder, code[2]),
                 color,
                 (int(code[3]), int(code[4])),
@@ -135,19 +134,26 @@ class Interpreter:
             goto = ["UP", "RIGHT", "LEFT", "DOWN"].index(code[1])
             speed = 0.5 if code[-1] == "WALK" else 0.2
             self.spriteMove.append(
-                [datetime.datetime.now() + datetime.timedelta(0, speed), self.sprites[code[2]], goto, int(code[3]), speed]
+                [datetime.datetime.now() + datetime.timedelta(0, speed),
+                 self.sprites[code[2]], goto, int(code[3]), speed]
             )
 
         if code[0] == "DIALOG":
             spriteFolder = os.path.join(self.mainPath, "sprite")
             sprite = os.path.join(spriteFolder, code[1])
-            color = hexConvert(code[2])
+            color = hex_convert(code[2])
             boolean = True if code[4].lower() == "true" else False
-            if not "dialog" in self.rpg.in_surface():
-                self.rpg.add_to_surface("dialog", Dialog(icon=sprite, color=color, txt=code[3], haveToContinue=boolean, font="./font/monospace.ttf", screenSize=self.rpg.get_size()))
+            if "dialog" not in self.rpg.in_surface():
+                self.rpg.add_to_surface("dialog",
+                                        Dialog(icon=sprite, color=color, txt=code[3], haveToContinue=boolean,
+                                               font="./font/monospace.ttf", screenSize=self.rpg.get_size())
+                                        )
             else:
-                self.dialog_buffer.append(Dialog(icon=sprite, color=color, txt=code[3], haveToContinue=boolean, font="./font/monospace.ttf", screenSize=self.rpg.get_size()))
-            ## TODO: Stop instructions
+                self.dialog_buffer.append(Dialog(icon=sprite, color=color, txt=code[3],
+                                                 haveToContinue=boolean, font="./font/monospace.ttf",
+                                                 screenSize=self.rpg.get_size())
+                                          )
+            # TODO: Stop instructions
 
     def execute(self, filename: str):
         with open(f"{self.gameDir}/game/script/{filename}", 'r') as script:
@@ -159,11 +165,11 @@ class Interpreter:
     def mainloop(self):
         # ~ self.evaluated = self.rpg.get_interruption()
         if self.dialog_buffer:
-            if not "dialog" in self.rpg.in_surface():
+            if "dialog" not in self.rpg.in_surface():
                 self.rpg.add_to_surface("dialog", self.dialog_buffer[0])
                 self.dialog_buffer = self.dialog_buffer[1:]
 
-        if not self.dialog_buffer and self.end_dialog and not "dialog" in self.rpg.in_surface():
+        if not self.dialog_buffer and self.end_dialog and "dialog" not in self.rpg.in_surface():
             self.evaluate(self.end_dialog[0])
             self.end_dialog = self.end_dialog[1:]
 
@@ -177,7 +183,6 @@ class Interpreter:
                 else:
                     self.spriteMove[0][1].stop(self.spriteMove[0][2])
                     self.spriteMove.remove(self.spriteMove[0])
-
 
         if self.string[1] and self.string[0] < datetime.datetime.now():
             self.term.removeLine()
@@ -210,7 +215,6 @@ class Interpreter:
                 self.typeBuffer = ""
                 self.string = (0, [], 0)
                 self.evaluated = True
-
 
             if self.evaluated:
                 self.codeTree = self.codeTree[1:]

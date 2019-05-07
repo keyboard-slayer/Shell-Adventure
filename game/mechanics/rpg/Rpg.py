@@ -3,15 +3,16 @@ from pygame.locals import *
 
 from typing import (
     Tuple,
-    Dict 
+    Dict
 )
+
 
 class Rpg:
     def __init__(self, size):
         self.sprites = {}
         self.surface = pygame.Surface(size)
-        self.mouseCollide = False 
-        self.interruption = False 
+        self.mouseCollide = False
+        self.interruption = False
 
     def get_interruption(self) -> bool:
         return not self.interruption
@@ -21,7 +22,7 @@ class Rpg:
 
     def add_to_surface(self, name: str, sprite: pygame.sprite.Sprite):
         self.sprites[name] = sprite
-    
+
     def in_surface(self) -> Dict[str, object]:
         return self.sprites
 
@@ -56,6 +57,6 @@ class Rpg:
                         instructions.append(awnser)
                 except AttributeError:
                     continue
-        
+
         for instrct in instructions:
             exec(instrct)
