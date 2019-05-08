@@ -25,4 +25,4 @@ TYPESTRING 0.05s "Laisse moi m'en occupé, rejoints moi dans mon bureau"
 CLEAR TERM
 WAIT 2s
 
-LOADSCRIPT "intro/office.adv"
+LOADSCRIPT "Intro/office.adv"

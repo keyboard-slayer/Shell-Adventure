@@ -32,7 +32,7 @@ class SAdvParser(Parser):
 
     @_('SAY STRING')  # DONE
     def statement(self, p):
-        return ('PYTHON', f'self.term.add_to_display(self.parseString(\"{p.STRING}\"))')
+        return ('PYTHON', f'self.term.add_to_display(self.parse_string(\"{p.STRING}\"))')
 
     @_('SAY NAME')  # DONE
     def statement(self, p):
@@ -143,39 +143,39 @@ class SAdvParser(Parser):
             del self.env["loop"][list(self.env["loop"].keys())[-1]]
             return ("REPEAT", time, toreturn)
 
-    @_('IFEXIST STRING THEN statement')
+    @_('IFEXIST STRING THEN statement')  # TODO Google Docs
     def statement(self, p):
         return ("EXIST", p.STRING, p.statement)
 
-    @_('DISABLE GAMEPART')
+    @_('DISABLE GAMEPART')  # TODO Google Docs
     def statement(self, p):
         return ("DISABLE", p.GAMEPART.lower())
 
-    @_('ENABLE GAMEPART')
+    @_('ENABLE GAMEPART')  # TODO Google Docs
     def statement(self, p):
         return ("ENABLE", p.GAMEPART.lower())
 
-    @_('DISABLE TERMPART')
+    @_('DISABLE TERMPART')  # TODO Google Docs
     def statement(self, p):
         return ("PYTHON", f"self.term.disable_{p.TERMPART.lower()}()")
 
-    @_('ENABLE TERMPART')
+    @_('ENABLE TERMPART')  # TODO Google Docs
     def statement(self, p):
         return ("PYTHON", f"self.term.enable_{p.TERMPART.lower()}()")
 
-    @_('SETPOS GAMEPART NUM NUM')
+    @_('SETPOS GAMEPART NUM NUM')  # TODO Google Docs
     def statement(self, p):
         return ("PYTHON", f"self.pos[\"{p.GAMEPART.lower()}\"] = ({p.NUM0}, {p.NUM1})")
 
-    @_('SETSIZE GAMEPART NUM NUM')
+    @_('SETSIZE GAMEPART NUM NUM')  # TODO Google Docs
     def statement(self, p):
         return ("PYTHON", f"self.{p.GAMEPART.lower()}.resize(({p.NUM0}, {p.NUM1}))")
 
-    @_('LOADPATH STRING')
+    @_('LOADPATH STRING')  # TODO Google Docs
     def statement(self, p):
         return ("SETPATH", p.STRING)
 
-    @_('TYPESTRING TIME STRING')
+    @_('TYPESTRING TIME STRING')  # TODO Google Docs
     def statement(self, p):
         return ("TYPESTRING", p.TIME, p.STRING)
 
@@ -195,7 +195,7 @@ class SAdvParser(Parser):
     def statement(self, p):
         return ("PYTHON", f"self.term.set_env('HOST', \"{p.STRING}\")")
 
-    @_('LOADSPRITE NAME STRING NUM NUM NUM NUM NUM NUM HEXCOLOR NUM NUM')
+    @_('LOADSPRITE NAME STRING NUM NUM NUM NUM NUM NUM HEXCOLOR NUM NUM')  # TOFIX
     def statement(self, p):
         return (
             "LOADSPRITE",
@@ -212,11 +212,11 @@ class SAdvParser(Parser):
             p.NUM7
         )
 
-    @_('GO POS NAME NUM SPEED')
+    @_('GO POS NAME NUM SPEED')  # TOFIX
     def statement(self, p):
         return ("GO", p.POS, p.NAME, p.NUM, p.SPEED)
 
-    @_('DIALOG STRING HEXCOLOR STRING BOOL')
+    @_('DIALOG STRING HEXCOLOR STRING BOOL')  # TODO
     def statement(self, p):
         return ("DIALOG", p.STRING0, p.HEXCOLOR, p.STRING1, p.BOOL)
 

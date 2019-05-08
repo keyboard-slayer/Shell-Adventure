@@ -10,7 +10,6 @@ from typing import Tuple
 import os
 import datetime
 
-
 def hex_convert(hexColor: str) -> Tuple[int, int, int]:
     hexColor = hexColor[1:]
     decimalColor = []
@@ -82,6 +81,10 @@ class Interpreter:
             size = "500, 540" if code[1] != "rpg" else "1420, 1080"
             exec(f"self.{code[1]}.resize(({size}))")
             self.pos[code[1]] = self.backPos[code[1]]
+
+        if code[0] == "EXIST":
+            if os.path.isfile(code[1]) or os.path.isdir(code[1]):
+                self.evaluate(code[2])
 
         if code[0] == "INPUT":
             if len(code) == 3:
