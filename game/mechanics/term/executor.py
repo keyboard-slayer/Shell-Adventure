@@ -111,7 +111,6 @@ def file_and_out(filename: str, term:object):
             if eof and cat:
                 cat = False
                 eof = False
-                print(True)
                 for towrite in writeBuffer:
                     execute_and_out(f"echo {towrite}", term)
                 writeBuffer = []

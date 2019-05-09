@@ -1,17 +1,27 @@
 ;
-;   Début du RPG 
+;   Début du RPG
 ;
 
 LOADPATH "intro"
 
-ENABLE RPG 
+FUN START_TERM
+  RESET RPG
+  ENABLE TERM
+  SETSIZE TERM 540 1080
+
+  GO LEFT sci 5 RUN
+  RESET sci
+
+  LOADSCRIPT "Intro/prompt_name.adv"
+END FUN
+
+ENABLE RPG
 DISABLE TERM
 DISABLE QUEST
 
 SETSIZE RPG 1920 1080
 
-
-LOADSPRITE sci "scientist.png" 960 540 21 27 0 3  #3cff00 60 60 
+LOADSPRITE sci "scientist.png" 960 540 21 27 0 3 #3cff00 60 60
 ; VAR - FILENAME - POSX - POSY - WIDTH - HEIGHT - INDICE SPRITE - NBR SPRITE VERTICAL - COLOR BACK - NEW WIDTH - NEW HEIGHT
 
 DIALOG "dialog-sci.png" #3cff00 "Salutation cher élève !" TRUE
@@ -21,5 +31,7 @@ GO DOWN sci 1 WALK
 
 DIALOG "dialog-sci.png" #3cff00 "Avant de commencer ta grande aventure dans le shell j'aurais besoin d'en savoir un peu plus sur toi" TRUE
 DIALOG "dialog-sci.png" #3cff00 "Comment te prénomme tu ?" TRUE
-DIALOG "dialog-sci.png" #3cff00 "Oh, tu ne sais pas où l'entrer !" TRUE 
-DIALOG "dialog-sci.png" #3cff00 "Ne craints rien tu va l'entrer dans le shell" FALSE 
+DIALOG "dialog-sci.png" #3cff00 "Oh, tu ne sais pas où l'entrer !" TRUE
+DIALOG "dialog-sci.png" #3cff00 "Ne craints rien tu va l'entrer dans le shell" FALSE
+
+WAIT END DIALOG THEN CALL START_TERM

@@ -134,7 +134,6 @@ class SAdvParser(Parser):
 
     @_('END LOOP')  # TODO Google docs
     def statement(self, p):
-        print("OK")
         if not self.env["loop"]:
             raise SyntaxError()
         else:
@@ -154,6 +153,14 @@ class SAdvParser(Parser):
     @_('ENABLE GAMEPART')  # TODO Google Docs
     def statement(self, p):
         return ("ENABLE", p.GAMEPART.lower())
+
+    @_('RESET GAMEPART')
+    def statement(self, p):
+        return ("ENABLE", p.GAMEPART.lower())
+
+    @_('RESET NAME')
+    def statement(self, p):
+        return ("GO", "DOWN", p.NAME, 0, "RUN")
 
     @_('DISABLE TERMPART')  # TODO Google Docs
     def statement(self, p):
@@ -181,7 +188,7 @@ class SAdvParser(Parser):
 
     @_('TYPESTRING TIME NAME')
     def statement(self, p):
-        return ("PYTHON", f"self.evaluate([(\"TYPESTRING\", \"{p.TIME}\", self.variable[\"{p.NAME}\"]))")
+        return ("PYTHON", f"self.evaluate([(\"TYPESTRING\", \"{p.TIME}\", globals()[\"{p.NAME}\"]))")
 
     @_('SETUSERNAME STRING')
     def statement(self, p):
@@ -189,13 +196,17 @@ class SAdvParser(Parser):
 
     @_('SETUSERNAME NAME')
     def statement(self, p):
-        return ("PYTHON", f"self.term.set_env('USER', self.variable[\"{p.NAME}\"])")
+        return ("PYTHON", f"self.term.set_env('USER', globals()[\"{p.NAME}\"])")
 
     @_('SETMACHINENAME STRING')
     def statement(self, p):
         return ("PYTHON", f"self.term.set_env('HOST', \"{p.STRING}\")")
 
-    @_('LOADSPRITE NAME STRING NUM NUM NUM NUM NUM NUM HEXCOLOR NUM NUM')  # TOFIX
+    @_('SETMACHINENAME NAME')
+    def statement(self, p):
+        return("PYTHON", f"self.term.set_env('HOST', globals()[\"{p.NAME}\"])")
+
+    @_('LOADSPRITE NAME STRING NUM NUM NUM NUM NUM NUM HEXCOLOR NUM NUM')
     def statement(self, p):
         return (
             "LOADSPRITE",

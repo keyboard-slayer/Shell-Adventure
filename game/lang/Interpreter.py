@@ -92,6 +92,7 @@ class Interpreter:
 
             self.term.getInput()
             self.inputVar = code[1]
+
             self.evaluated = False
 
         if code[0] == "LOADSCRIPT":
@@ -173,7 +174,7 @@ class Interpreter:
                 self.dialog_buffer = self.dialog_buffer[1:]
 
         if not self.dialog_buffer and self.end_dialog and "dialog" not in self.rpg.in_surface():
-            self.evaluate(self.end_dialog[0])
+            self.codeTree += self.end_dialog[0]
             self.end_dialog = self.end_dialog[1:]
 
         if self.spriteMove:
@@ -195,6 +196,7 @@ class Interpreter:
             self.term.add_to_display(self.typeBuffer)
 
         if self.codeTree:
+            #print(self.codeTree)
             if self.evaluated:
                 if type(self.codeTree[0]) == tuple:
                     self.evaluate(self.codeTree[0])

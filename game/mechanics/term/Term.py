@@ -146,8 +146,8 @@ class Term:
             (0, len(self.visualLine) * 22)
 
         )
-        if self.lineRect.x+self.lineRect.width > self.surface.get_width() - 10:
-            print(True)
+        #if self.lineRect.x+self.lineRect.width > self.surface.get_width() - 10:
+        #    print(True)
 
     def keydown(self, keycode: int):
         if self.mouseCollide:
@@ -178,6 +178,7 @@ class Term:
             self.blinkX = 0
 
         elif keyName == "return":
+            self.blinkX = 0
             if self.bash and not self.inInput:
                 self.visualLine.append((self.prompt, self.currentTyping))
                 self.history.append(self.currentTyping)
@@ -188,7 +189,6 @@ class Term:
             if self.custom:
                 self.custom = ""
             self.currentTyping = ""
-            self.blinkX = 0
 
         elif keyName == "space":
             self.currentTyping += ' '

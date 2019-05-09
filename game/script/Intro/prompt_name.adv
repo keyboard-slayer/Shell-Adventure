@@ -1,0 +1,18 @@
+DISABLE PROMPT
+DISABLE BASH
+
+TYPESTRING 0.1s "Running Shell..."
+WAIT 0.5s
+CLEAR TERM
+
+SAY "Formulaire d'enregistrement:"
+ENABLE PROMPT
+INPUT SURNAME "Prenom: "
+SETUSERNAME SURNAME
+
+INPUT COMPNAME "Nom de l'ordinateur: "
+SETMACHINENAME COMPNAME
+ENABLE BASH
+CLEAR TERM
+
+SAY "Enregistrement terminé!"

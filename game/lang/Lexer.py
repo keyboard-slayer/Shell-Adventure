@@ -53,7 +53,8 @@ class SAdvLexer(Lexer):
         SPEED,
         DIALOG,
         BOOL,
-        OUTPUT
+        OUTPUT,
+        RESET
     }
 
     ignore = '\n'
@@ -78,6 +79,7 @@ class SAdvLexer(Lexer):
     GAMEPART = r'(?i)(TERM|QUEST|RPG)'
     DISABLE = r'(?i)DISABLE'
     ENABLE = r'(?i)ENABLE'
+    RESET = r'(?i)RESET'
     SAY = r'(?i)SAY'
     DONE = r'(?i)DONE'
     OBJECTIF = r'(?i)OBJECTIF'
@@ -105,6 +107,7 @@ class SAdvLexer(Lexer):
     NUM = r'\d{1,10}'
     SPACE = r'  '
     OUTPUT = r'(?i)OUTPUT'
+
 
     ignore_newline = r'\n'
 
