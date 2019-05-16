@@ -23,10 +23,8 @@
   \date{2018 - 2019}
 \end{titlepage}
 
+\pagestyle{headings}
 \tableofcontents
-
-\pagestyle{empty}
-
 \part*{Remerciments}
 
 Je tiens tout d'abord à remercier mon grand père Yvan, qui m'a introduit au monde de l'informatique dés mon plus jeune âge, et de m'avoir montré aussi les joies de Linux dés mes 7 ans.
@@ -67,6 +65,11 @@ A cause du temps assez limité, j'ai implimenté un langage de programmation afi
 
 \newpage
 
+\begin{figure}[hb!]
+  \includegraphics[width=\linewidth]{img/image1}
+  \caption{Capture d'écran de la disposition par défault}
+  \label{fig:screen1}
+\end{figure}
 \section {Interface utilisateur}
 Par défaut, l’interface du jeu se présente comme représenté sur la figure \ref{fig:screen1}
 \begin{description}
@@ -77,18 +80,12 @@ Par défaut, l’interface du jeu se présente comme représenté sur la figure 
 \par Il est aussi important de noter que chaque scripts est libre de changer cette disposition comme bon
 l'entend
 
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/image1}
-  \caption{Capture d'écran de la disposition par défault}
-  \label{fig:screen1}
-\end{figure}
 
 \chapter{Analyse}
 \section{Classes}
 \subsection{game.mechanics.term.Term}
 La classe \emph{Term} permet de créer des surfaces d'interaction tel que ligne de commande et entrée standard pour l’utilisateur, une fois initialisé elle charge la police de caractères monospace (en 22 pixels car c’est beaucoup plus lisible et agréable à utiliser), ensuite elle crée un dossier \emph{.shelladv} dans le dossier personnel de l’utilisateur (Exemple: \emph{/home/dalcjor/.shelladv} )
 \subsection*{Attributs}
-
 \begin{itemize}
   \item \mintinline{python}{surface : pygame.Surface}		$\rightarrow$ Surface principale du terminal
   \item \mintinline{python}{mono : pygame.font.Font}		$\rightarrow$ Police de caractère monospace
@@ -106,7 +103,105 @@ La classe \emph{Term} permet de créer des surfaces d'interaction tel que ligne 
   \item \mintinline{python}{env : Dict[str, str]}		$\rightarrow$ Variables d'environnements semblables à celles présentes dans les systèmes UNIX
   \item \mintinline{python}{prompt: str}		$\rightarrow$ Permet de prendre connaissance du nom d’utilisateur, nom de la machine et le CWD (Current Work Directory)
   \item \mintinline{python}{tick: float}		$\rightarrow$ Heure actuel pour permettre de réguler la vitesse du blink (le rectangle à côté du prompt)
+\end{itemize}
+
+\subsection*{Méthodes}
+\begin{itemize}
+  \item \mintinline{python}{resize(size: Tuple[int, int])}		$\rightarrow$ Change la taille de la surface du terminal
+  \item \mintinline{python}{disable_prompt()}		$\rightarrow$  cache le prompt
+  \item \mintinline{python}{enable_prompt()}		$\rightarrow$ Ré-affiche le prompt
+  \item \mintinline{python}{isprompt_enabled() : bool}		$\rightarrow$ Retourne \mintinline{python}{True} si le prompt est affiché
+  \item \mintinline{python}{disable_bash()}		$\rightarrow$ Désactive l'exécution des entrées
+  \item \mintinline{python}{enable_bash()}		$\rightarrow$ Réactive l'exécution des entrées
+  \item \mintinline{python}{getInput()}		$\rightarrow$ Active l’entrée utilisateur
+  \item \mintinline{python}{removeLine()}		$\rightarrow$ Supprime la dernière ligne affichée dans le terminal
+  \item \mintinline{python}{set_custom_prompt(string: str)}		$\rightarrow$ Permet de mettre un prompt customisé
+  \item \mintinline{python}{add_to_display(output: str)}		$\rightarrow$ Permet d’ajouter une ligne à l’attributs \mintinline{python}{visualLine}, qui servira ensuite pour l’affichage
+  \item \mintinline{python}{clear()} $\rightarrow$ Permet d’effacer les lignes affichées à l’écran
+  \item \mintinline{python}{get_env(): Dict[str, str]}		$\rightarrow$ Retourne les variables d'environnements
+  \item \mintinline{python}{draw()}	$\rightarrow$ Permet de dessiner les lignes de commandes entrées par l’utilisateur
+  \item \mintinline{python}{drawBlink()}		$\rightarrow$ Dessine le rectangle qui clignote à côté du prompt
+  \item \mintinline{python}{keydown()}		$\rightarrow$ Méthode de traitement des touches pressées, pour ensuite les affichéer dans la console
+  \item \mintinline{python}{update()}		$\rightarrow$  Méthode qui gère le curseur et appelle la méthode \mintinline{python}{draw}
+  \item \mintinline{python}{get_surface(): pygame.Surface()}		$\rightarrow$ Actualise et retourne la surface du terminal
+\end{itemize}
+\newpage
+
+\subsection{game.mechanics.term.History}
+Comme dans tout bon shell, il y a un gestionnaire d’historique, cela permet de rechercher des commandes déjà tapées.
+Les historiques sont sauvegardé de façon à ce que l'utilisateur puisse retrouver ces commandes dans le jeu.
+
+\subsection*{Attributs}
+
+\begin{itemize}
+  \item \mintinline{python}{home: str}	$\rightarrow$ Chemin vers le dossier utilisateur
+  \item \mintinline{python}{hist: file}		$\rightarrow$ Lien en lecture vers le fichier d’historique (\mintinline{bash}{\$HOME/.bash_history}) % To remove
+\end{itemize}
+
+\subsection*{Méthodes}
+\begin{itemize}
+\item \mintinline{python}{__getitem__(index: int) : str}	$\rightarrow$ retourne une ligne spécifique de l’historique
+\item \mintinline{python}{append(line: str)}	$\rightarrow$  ajoute une ligne à l’historique
+\item \mintinline{python}{openFile()}	$\rightarrow$ Ouvre le fichier d’historique
+\item \mintinline{python}{get_size() : int}	$\rightarrow$ Retourne le nombre de commande présent dans l'historique
+\item \mintinline{python}{get_previous() : str}	$\rightarrow$ Retourne la command qui a été précedemment introduite
+\item \mintinline{python}{get_next()}	$\rightarrow$ Retourne la commande qui suis
 
 \end{itemize}
+
+\newpage
+
+\subsection{game.mechanics.rpg.Rpg.Rpg}
+La classe \mintinline{python}{Rpg} permet d’afficher les éléments visuels.
+
+\subsection*{Attributs}
+\begin{itemize}
+  \item \mintinline{python}{sprites: Dict[str, game.mechanics.rpg.sprite.Sprite]}	$\rightarrow$ Dictionnaire qui lie un sprite à un nom (Le nom étant une variable du Adventure Script), ce dictionnaire contient tous les sprites à afficher à l’écran
+  \item \mintinline{python}{surface: pygame.Surface}	$\rightarrow$ Surface du Rpg
+\end{itemize}
+
+\subsection*{Métohdes}
+\begin{itemize}
+  \item \mintinline{python}{add_to_surface(name: str, sprite: game.mechanics.rpg.sprite.Sprite)}	$\rightarrow$ Permet d’ajouter un sprite à l’écran
+  \item \mintinline{python}{update()}	$\rightarrow$  Actualise la surface et applique les sprites à la surface
+  \item \mintinline{python}{resize(size: Tuple[int, int])}	$\rightarrow$ Change la taille de la surface
+\end{itemize}
+\newpage
+
+\subsection {game.mechanics.rpg.sprite.Sprite}
+Cette classe permet de gérer les spritesheet automatiquement, grâce au \emph{Adventure Script} (voir autre dossier pour syntaxe), il est possible de gérer des spritesheet avec 4 actions dans cette ordre précis: Pars vers le haut, pars à Droite, pars à Gauche,  pars vers le bas. Le premier sprite doit être celui par défaut (au repos). Par contre vous pouvez mettre autant de frames à une action que vous voulez. Toutes les configurations nécessaires sont faites via \emph{Adventure Script}
+
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=3cm]{img/image3}
+  \caption{Exemple de spritesheet compatible}
+  \label{fig:spritesheet}
+\end{figure}
+
+\subsection*{Attributs}
+\begin{itemize}
+  \item \mintinline{python}{size: Tuple[int, int]}		$\rightarrow$ Taille d’une frame du sprite
+  \item \mintinline{python}{finalSize: Tuple[int, int]}		$\rightarrow$ Taille finale d’une frame (car elles sont souvent trop petites)
+  \item \mintinline{python}{index: Tuple[int, int]}		$\rightarrow$ Position de la frame actuelle
+  \item \mintinline{python}{spriteSurface: pygame.Surface}		$\rightarrow$ Surface dédiée à une frame
+  \item \mintinline{python}{spriteSheet: pygame.Surface}		$\rightarrow$ Surface qui contient toute la spritesheet au complet
+  \end{itemize}
+\subsection*{Méthodes}
+\begin{itemize}
+  \item \mintinline{python}{get_pos() : Tuple[int, int] }		$\rightarrow$ Retourne la position du sprite sur la Surface dédié au RPG
+  \item \mintinline{python}{get_surface(): pygame.Surface}		$\rightarrow$ Applique une frame à l’attribut \item \mintinline{python}{spriteSurface} et retourne la surface
+  \item \mintinline{python}{reset(index: int)}		$\rightarrow$ Met le sprite à une position repos en fonction de sa direction, s’il est à sa dernière frame ou s’il change de direction
+  \item \mintinline{python}{move(self, way: int)}		$\rightarrow$ Fait passer le sprite à sa frame suivante
+  \item \mintinline{python}{stop(way: int)}		$\rightarrow$ Met le sprite en repos, car il a fini de se déplacer
+\end{itemize}
+\newpage
+\begin{figure}[hb!]
+  \centering
+  \includegraphics[width=10cm]{img/image4}
+  \caption{Exemple de quêtes}
+  \label{fig:spritesheet}
+\end{figure}
+\subsection{game.mechanics.quest.Quest.Quest}
+Cette classe permet de gérer les quêtes grâce au langage implémenté dans le jeu (voir autre dossier pour syntaxe). Il est important de noter que le jeu est limité à 18 quêtes à la fois.
 
 \end{document}
