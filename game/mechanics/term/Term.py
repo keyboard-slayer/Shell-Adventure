@@ -155,6 +155,16 @@ class Term:
         else:
             keyName = ''
 
+        print(keyName)
+
+        if keyName == "up":
+            self.currentTyping = self.history.get_previous()
+            self.blinkX = 0
+
+        if keyName == "down":
+            self.currentTyping = self.history.get_next()
+            self.blinkX = 0
+            
         if keyName == "<" and pygame.key.get_mods() & pygame.KMOD_SHIFT:
                 self.currentTyping += '>'
 
