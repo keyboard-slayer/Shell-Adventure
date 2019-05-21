@@ -155,8 +155,8 @@ class Term:
         else:
             keyName = ''
 
-        print(keyName)
-
+        if keyName == "[*]":
+            print(self.blinkX)
         if keyName == "up":
             self.currentTyping = self.history.get_previous()
             self.blinkX = 0
@@ -164,7 +164,7 @@ class Term:
         if keyName == "down":
             self.currentTyping = self.history.get_next()
             self.blinkX = 0
-            
+
         if keyName == "<" and pygame.key.get_mods() & pygame.KMOD_SHIFT:
                 self.currentTyping += '>'
 
@@ -230,7 +230,7 @@ class Term:
         self.updatePrompt()
         if 0.3 < time.time() - self.tick < 0.8 and self.mouseCollide:
             self.drawBlink()
-            while self.blinkRect is None or self.lineRect.colliderect(self.blinkRect) and self.mouseCollide:
+            while self.blinkRect is None or self.lineRect.colliderect(self.blinkRect):
                 self.drawBlink()
                 self.blinkX += 1
                 done = True
