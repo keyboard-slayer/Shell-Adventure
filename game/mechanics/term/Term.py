@@ -107,6 +107,7 @@ class Term:
 
     def add_to_display(self, output: str):
         self.visualLine.append((self.prompt, f">{output}"))
+        self.fontSurface = None
         self.blinkX = 0
 
     def clear(self):
@@ -146,6 +147,8 @@ class Term:
             (0, len(self.visualLine) * 22)
 
         )
+
+
         #if self.lineRect.x+self.lineRect.width > self.surface.get_width() - 10:
         #    print(True)
 
@@ -215,25 +218,24 @@ class Term:
             self.currentTyping += keyName
 
     def drawBlink(self):
-        self.blinkRect = pygame.draw.rect(
+        pygame.draw.rect(
             self.surface,
             (255, 255, 255),
-            (self.blinkX,
-                2 + len(self.visualLine) * 22,
-                12,
-                20)
+            self.blinkRect
         )
 
     def update(self):
+        self.blinkRect = pygame.Rect(0, 2 + len(self.visualLine) * 22, 12, 20)
+        self.lineRect = None
+        self.blinkX = 0
         self.surface.fill((0, 0, 0))
         self.draw()
         self.updatePrompt()
         if 0.3 < time.time() - self.tick < 0.8 and self.mouseCollide:
-            self.drawBlink()
             while self.blinkRect is None or self.lineRect.colliderect(self.blinkRect):
-                self.drawBlink()
-                self.blinkX += 1
-                done = True
+                self.blinkRect = self.blinkRect.move(1, 0)
+
+            self.drawBlink()
         if time.time() - self.tick > 0.8:
             self.tick = time.time()
 
