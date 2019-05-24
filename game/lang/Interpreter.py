@@ -38,8 +38,8 @@ class Interpreter:
         self.typeBuffer = ""
 
         self.buffer = {
-            'FILE': ([], os.path.isfile),
-            'DIR': ([], os.path.isdir),
+            'FILE': ({}, os.path.isfile),
+            'DIR': ({}, os.path.isdir),
             'DELFILE': ({}, lambda fichier: not os.path.isfile(fichier)),
             'DELDIR': ({}, lambda dossier: not os.path.isdir(dossier))
         }
@@ -111,8 +111,12 @@ class Interpreter:
             self.evaluated = False
 
         if code[0] == "WAIT":
-            self.timing = datetime.datetime.now() + datetime.timedelta(0, float(code[1][:-1]))
-            self.evaluated = False
+            if code[1] in self.buffer.keys():
+                self.buffer[code[1]][0][code[2]] = code[3]
+                print(self.buffer[code[1]][0])
+            else:
+                self.timing = datetime.datetime.now() + datetime.timedelta(0, float(code[1][:-1]))
+                self.evaluated = False
 
         if code[0] == "SETPATH":
             if os.path.isdir(os.path.join(self.gameDir, code[1])):
@@ -142,6 +146,11 @@ class Interpreter:
                  self.sprites[code[2]], goto, int(code[3]), speed]
             )
 
+        if code[0] == "IF":
+            if globals()[code[1]] == code[2]:
+                self.evaluate(code[3])
+
+
         if code[0] == "DIALOG":
             spriteFolder = os.path.join(self.mainPath, "sprite")
             sprite = os.path.join(spriteFolder, code[1])
@@ -168,6 +177,15 @@ class Interpreter:
 
     def mainloop(self):
         # ~ self.evaluated = self.rpg.get_interruption()
+
+        for key in self.buffer.keys():
+            tofind = list(self.buffer[key][0])
+            if tofind:
+                if self.buffer[key][1](tofind[0]):
+                    self.evaluate(self.buffer[key][0][tofind[0]])
+                    del self.buffer[key][0][tofind[0]]
+
+
         if self.dialog_buffer:
             if "dialog" not in self.rpg.in_surface():
                 self.rpg.add_to_surface("dialog", self.dialog_buffer[0])

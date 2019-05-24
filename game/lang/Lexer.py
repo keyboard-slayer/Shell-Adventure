@@ -54,7 +54,9 @@ class SAdvLexer(Lexer):
         DIALOG,
         BOOL,
         OUTPUT,
-        RESET
+        RESET,
+        IF,
+        EQ
     }
 
     ignore = '\n'
@@ -64,6 +66,8 @@ class SAdvLexer(Lexer):
     BOOL = r'(?i)(TRUE|FALSE)'
     SPEED = r'(?i)(RUN|WALK)'
     DIALOG = r'(?i)DIALOG'
+    IF = r'(?i)IF'
+    EQ = r'=='
 
     CLEAR = r'(?i)CLEAR'
     INPUT = r'(?i)INPUT'

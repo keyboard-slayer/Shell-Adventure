@@ -234,3 +234,7 @@ class SAdvParser(Parser):
     @_('WAIT END DIALOG THEN statement')  # DONE
     def statement(self, p):
         return ("PYTHON", f"self.end_dialog.append({p.statement})")
+
+    @_('IF NAME EQ STRING THEN statement')
+    def statement(self, p):
+        return ("IF", p.NAME, p.STRING, p.statement)
