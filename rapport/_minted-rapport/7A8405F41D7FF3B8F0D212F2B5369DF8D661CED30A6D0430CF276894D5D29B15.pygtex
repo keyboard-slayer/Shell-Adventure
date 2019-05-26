@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{get\PYGZus{}pos}\PYG{p}{()} \PYG{p}{:} \PYG{n}{Tuple}\PYG{p}{[}\PYG{n+nb}{int}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{]} 
+\end{Verbatim}

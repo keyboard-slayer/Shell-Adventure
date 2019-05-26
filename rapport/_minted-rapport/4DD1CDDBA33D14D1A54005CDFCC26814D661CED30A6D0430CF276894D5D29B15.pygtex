@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{add}\PYG{p}{(}\PYG{n}{var}\PYG{p}{:} \PYG{n+nb}{str}\PYG{p}{,} \PYG{n}{event}\PYG{p}{:} \PYG{n+nb}{str}\PYG{p}{)}
+\end{Verbatim}

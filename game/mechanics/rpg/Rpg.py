@@ -12,10 +12,6 @@ class Rpg:
         self.sprites = {}
         self.surface = pygame.Surface(size)
         self.mouseCollide = False
-        self.interruption = False
-
-    def get_interruption(self) -> bool:
-        return not self.interruption
 
     def clear(self):
         self.surface.fill((0, 255, 0))
@@ -26,8 +22,6 @@ class Rpg:
     def in_surface(self) -> Dict[str, object]:
         return self.sprites
 
-    def did_mouse_collide(self) -> bool:
-        return self.mouseCollide
 
     def set_mouse_collide(self, collide: bool):
         self.mouseCollide = collide

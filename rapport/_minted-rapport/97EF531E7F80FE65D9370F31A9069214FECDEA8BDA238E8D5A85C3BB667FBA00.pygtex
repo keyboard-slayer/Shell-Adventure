@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{mouseCollide}\PYG{p}{:} \PYG{n+nb}{bool}
+\end{Verbatim}

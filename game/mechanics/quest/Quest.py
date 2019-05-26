@@ -21,7 +21,7 @@ class Quest:
             raise Exception("Too much quest !")
         self.quests[var] = event
 
-    def done(self, questVar):
+    def done(self, questVar: str):
         if questVar not in self.quests:
             raise NameError(f"{questVar} is not declared")
         else:

@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{add\PYGZus{}to\PYGZus{}surface}\PYG{p}{(}\PYG{n}{name}\PYG{p}{:} \PYG{n+nb}{str}\PYG{p}{,} \PYG{n}{sprite}\PYG{p}{:} \PYG{n}{game}\PYG{o}{.}\PYG{n}{mechanics}\PYG{o}{.}\PYG{n}{rpg}\PYG{o}{.}\PYG{n}{sprite}\PYG{o}{.}\PYG{n}{Sprite}\PYG{p}{)}
+\end{Verbatim}
