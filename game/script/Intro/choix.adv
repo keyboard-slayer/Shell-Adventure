@@ -1,0 +1,23 @@
+FUN clone
+  SAY "clone"
+END FUN
+
+FUN perso
+  SAY "perso"
+END FUN
+
+FUN tp
+  SAY "tp"
+END FUN
+
+CLEAR TERM
+ENABLE PROMPT
+SAY "Que veut tu faire pour commencer ?"
+SAY "1. Apprendre le clonage"
+SAY "2. Apprendre à faire apparaître des personnages"
+SAY "3. Créer une pièce et s'y téléporter"
+INPUT choix "Quelle est votre choix ?"
+
+IF choix == "1" THEN CALL clone
+IF choix == "2" THEN CALL perso
+IF choix == "3" THEN CALL tp

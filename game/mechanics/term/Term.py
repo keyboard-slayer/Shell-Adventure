@@ -153,10 +153,14 @@ class Term:
         #    print(True)
 
     def keydown(self, keycode: int):
+
         if self.mouseCollide:
             keyName = pygame.key.name(keycode)
         else:
             keyName = ''
+
+        if keyName[1:-1].isdigit():
+            self.currentTyping += keyName[1:-1]
 
         if keyName == "[*]":
             print(self.blinkX)
@@ -190,7 +194,7 @@ class Term:
             self.currentTyping = self.currentTyping[:-1]
             self.blinkX = 0
 
-        elif keyName == "return":
+        elif keyName == "return" or keyName == "enter":
             self.blinkX = 0
             if self.bash and not self.inInput:
                 self.visualLine.append((self.prompt, self.currentTyping))

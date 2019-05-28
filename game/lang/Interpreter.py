@@ -148,7 +148,7 @@ class Interpreter:
 
         if code[0] == "IF":
             if globals()[code[1]] == code[2]:
-                self.evaluate(code[3])
+                self.codeTree += code[3]
 
 
         if code[0] == "DIALOG":
