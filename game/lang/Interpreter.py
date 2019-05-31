@@ -48,8 +48,8 @@ class Interpreter:
         self.end_dialog = []
         self.spriteMove = []
         self.sprites = {}
-        self.pos = {'term': (1420, 0), 'quest': (1420, 540), 'rpg': (0, 0)}
-        self.backPos = {'term': (1420, 0), 'quest': (1420, 540), 'rpg': (0, 0)}
+        self.pos = {'term': (1320, 0), 'quest': (1320, 540), 'rpg': (0, 0)}
+        self.backPos = {'term': (1320, 0), 'quest': (1320, 540), 'rpg': (0, 0)}
 
     def parse(self, line):
         lex = self.lexer.tokenize(line)
@@ -78,7 +78,7 @@ class Interpreter:
             self.pos[code[1]] = (6666, 6666)
 
         if code[0] == "ENABLE":
-            size = "500, 540" if code[1] != "rpg" else "1420, 1080"
+            size = "600, 540" if code[1] != "rpg" else "1320, 1080"
             exec(f"self.{code[1]}.resize(({size}))")
             self.pos[code[1]] = self.backPos[code[1]]
 
@@ -219,8 +219,9 @@ class Interpreter:
                 if type(self.codeTree[0]) == tuple:
                     self.evaluate(self.codeTree[0])
                 else:
-                    for code in self.codeTree[0]:
-                        self.evaluate(code)
+                    if self.codeTree[0] is not None:
+                        for code in self.codeTree[0]:
+                            self.evaluate(code)
 
             if self.timing and self.timing < datetime.datetime.now():
                 self.timing = 0
