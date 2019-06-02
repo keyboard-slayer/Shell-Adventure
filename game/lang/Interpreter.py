@@ -9,6 +9,7 @@ from typing import Tuple
 
 import os
 import datetime
+import subprocess
 
 def hex_convert(hexColor: str) -> Tuple[int, int, int]:
     hexColor = hexColor[1:]
@@ -86,6 +87,13 @@ class Interpreter:
             if os.path.isfile(code[1]) or os.path.isdir(code[1]):
                 self.evaluate(code[2])
 
+        if code[0] == "CHECK":
+            sum1 = subprocess.check_output(["md5sum", code[1]]).decode('utf-8').split(' ')[0]
+            sum2 = subprocess.check_output(["md5sum", code[2]]).decode('utf-8').split(' ')[0]
+            print(sum1, sum2)
+            if sum1 != sum2:
+                self.evaluate(code[3])
+
         if code[0] == "INPUT":
             if len(code) == 3:
                 self.term.set_custom_prompt(self.parse_string(code[2]))
@@ -109,6 +117,9 @@ class Interpreter:
             nextTiming = current_timing + datetime.timedelta(0, float(code[1][:-1]))
             self.string = (nextTiming, self.parse_string(code[2]), float(code[1][:-1]))
             self.evaluated = False
+
+        if code[0] == "QUEST":
+            self.quest.done(code[1])
 
         if code[0] == "WAIT":
             if code[1] in self.buffer.keys():
@@ -182,7 +193,12 @@ class Interpreter:
             tofind = list(self.buffer[key][0])
             if tofind:
                 if self.buffer[key][1](tofind[0]):
-                    self.evaluate(self.buffer[key][0][tofind[0]])
+                    if type(self.buffer[key][0][tofind[0]]) != list:
+                        self.evaluate(self.buffer[key][0][tofind[0]])
+                    else:
+                        for line in self.buffer[key][0][tofind[0]]:
+                            print(line)
+                            self.evaluate(line)
                     del self.buffer[key][0][tofind[0]]
 
 

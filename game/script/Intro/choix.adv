@@ -1,14 +1,3 @@
-FUN clonenext
-  DONE clone
-  LOADSPRITE sci2 "scientist.png" 960 540 21 27 0 3 #3cff00 60 60
-  DIALOG "dialog-sci.png" #3cff00 "BEEP BEEP, JE SUIS UN CLONE" FALSE
-  GO DOWN sci2 6 RUN
-  WAIT 1s
-  DIALOG "dialog-sci.png" #3cff00 "Yeaaah Bien joué, maintenant supprime le avec la commande RM! " TRUE
-  DIALOG "dialog-sci.png" #3cff00 "Comme ça: rm scientifique1"
-  LOADSCRIPT "Intro/choix.adv"
-END FUN
-
 FUN showui
   ENABLE RPG
   ENABLE QUEST
@@ -16,13 +5,28 @@ FUN showui
   ENABLE BASH
 END FUN
 
+FUN cheatclone
+  DISABLE TERM
+  SETSIZE RPG 1920 1080
+  CLEAR QUEST
+  CLEAR TERM
+  DIALOG "dialog-sci.png" #3cff00 "Ooh il me semble que tu n'as pas fait une copie ... " TRUE
+  DIALOG "dialog-sci.png" #3cff00 "Ok, nous allons recommencer !" FALSE
+  WAIT END DIALOG THEN CALL LOADSCRIPT "Intro/choix.adv"
+END FUN
+
+FUN nextclone
+  CHECK COPY "sci" "sci1" ELSE CALL cheatclone
+  DONE cloned
+END FUN
+
 FUN clone
   EXEC "if [ -f 'sci*' ]; then rm sci*; fi"
   DIALOG "dialog-sci.png" #3cff00 "Pour cloner un personnage ou un objet, tu dois utiliser la commande CP " TRUE
   DIALOG "dialog-sci.png" #3cff00 "Allez ! essais. Tappe dans le terminal cp sci sci1", FALSE
   WAIT END DIALOG THEN CALL showui
-  OBJECTIF clone "Clone le professeur avec la commande cp"
-  CALL clonenext
+  OBJECTIF cloned "Clone le professeur avec la commande cp"
+  WAIT FILE "sci1" THEN CALL nextclone
 END FUN
 
 
