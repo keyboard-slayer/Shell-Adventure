@@ -15,7 +15,7 @@
   \vspace{0.2cm}
 	{\scshape \Large The Shell Adventure\par}
   \vspace{3cm}
-  {\Large\itshape Travail de fin d'étude \par réalisé par \par Jordan Dalcq \par}
+  {\Large\itshape Travail de fin d'études \par réalisé par \par Jordan Dalcq \par}
   \vfill
   \scshape Année académique 2018 - 2019
   \title{The Shell Adventure}
@@ -25,18 +25,19 @@
 
 \pagestyle{headings}
 \tableofcontents
-\part*{Remerciments}
+\part*{Remerciements}
 
-Je tiens tout d'abord à remercier mon grand père Yvan, qui m'a introduit au monde de l'informatique dés mon plus jeune âge, et de m'avoir montré aussi les joies de Linux dés mes 7 ans.
+Je tiens tout d'abord à remercier mon grand père Yvan, qui m'a introduit au monde de l'informatique dès mon plus jeune âge, et de m'avoir montré aussi les joies de Linux dès mes 7 ans.
 \newline
-\par Je remercie mes parents Fabienne et Marc pour avoir investis en moi afin de me permettre de continuer sur ma voie vers un métier qui me pasionne.
+\par Je remercie mes parents Fabienne et Marc pour avoir investi en moi afin de me permettre de continuer ma voie vers un métier qui me passionne.
 \newline
-\par Je remercie Alex Roşca, d'avoir été mon premier amis, dans cette grande aventure, merci de m'avoir permis de découvrire la programmation
+\par Je remercie Alex Roşca, d'avoir été mon premier ami, dans cette grande aventure. Merci de m'avoir permis de découvrir la programmation
 \newline
-\par Je remercie Monsieur David Carrera pour avoir été le seule professeur qui a été capable à me poussé au meillieur dans ma passion.
+\par Je remercie Monsieur David Carrera pour avoir été le seul professeur qui a été capable de me pousser au meilleur dans ma passion.
 \newline
-\par Je tiens aussi à remercier toutes les personne que j'ai rencontré à l'Institut Saint Jean Berchmans, pour m'avoir influencé dans ce projet d'une manière ou d'une autre.
-
+\par Je tiens aussi à remercier toutes les personnes que j'ai rencontrées à l'Institut Saint Jean Berchmans, pour m'avoir influencé dans ce projet d'une manière ou d'une autre.
+\newline
+\par J'aimerais aussi remercier Madame Challon pour m'avoir aider à la rédaction de ce rapport.
 \part{Introduction et Analyse}
 
 \section*{Contexte}
@@ -49,40 +50,39 @@ L’idée de base est assez simple, il faut taper des commandes pour interagir a
 Comme par exemple:
 
 \begin {itemize}
-  \item cd  : Pour se déplacer d’une pièce à une autre
-  touch : Pour créer un objet ou bien faire apparaître une personne
-  \item cp : Pour cloner un objet ou personnage
-  \item mv : Pour déplacer un objet ou personnage
-  \item cat : Pour connaître le contenu d’un objet ou alors l'identité d’un personnage
-  \item rm : Pour jeter un objet ou “éliminer” un personnage
-  \item tree : Scanner à rayon X pour voir à travers les murs
+  \item \mintinline{c}{cd}  : Pour se déplacer d’une pièce à une autre
+  \item \mintinline{bash}{touch} : Pour créer un objet ou bien faire apparaître une personne
+  \item \mintinline{bash}{cp} : Pour cloner un objet ou personnage
+  \item \mintinline{bash}{mv} : Pour déplacer un objet ou personnage
+  \item \mintinline{bash}{cat} : Pour connaître le contenu d’un objet ou alors l'identité d’un personnage
+  \item \mintinline{bash}{rm} : Pour jeter un objet ou “éliminer” un personnage
+  \item \mintinline{bash}{tree} : Scanner à rayon X pour voir à travers les murs
 \end {itemize}
 
-A cause du temps assez limité, j'ai implimenté un langage de programmation afin de laisser à l'utilisateur une liberté de créer des niveaux à sa guise.
+A cause du temps assez limité, j'ai implémenté un langage de programmation afin de laisser à l'utilisateur une liberté de créer des niveaux à sa guise.
 \newpage
 
 \begin{figure}[hb!]
   \includegraphics[width=\linewidth]{img/image1}
-  \caption{Capture d'écran de la disposition par défault}
+  \caption{Capture d'écran de la disposition par défaut}
   \label{fig:screen1}
 \end{figure}
 \section {Interface utilisateur}
 Par défaut, l’interface du jeu se présente comme représenté sur la figure. \ref{fig:screen1}
 \begin{description}
-  \item [Élément visuel / RPG:] Là où seront dessinés les personnages et objet (armoir, chaise, garage, maison …).
-  \item [Ligne de commandes:] Permet d’introduire des lignes de commande SH, qui seront interprétés par la suite.
+  \item [Élément visuel / RPG:] Là où seront dessinés les personnages et objets (armoire, chaise, garage, maison …).
+  \item [Ligne de commandes:] Permet d’introduire des lignes de commandes BASH, qui seront interprétés par la suite.
   \item [Objectifs:] Permet d’afficher les tâches que le joueur doit effectuer.
 \end{description}
-\par Il est aussi important de noter que chaque scripts est libre de changer cette disposition comme bon l'entend.
+\par Il est aussi important de noter que chaque scripts est libre de changer cette disposition comme l'utilisateur l'entend.
 
 \chapter{Analyse}
-\section{Classes}
-\subsection{game.mechanics.term.Term}
-La classe \emph{Term} permet de créer des surfaces d'interaction tel que ligne de commande POSIX et entrée utilisateur (= input), une fois initialisé elle charge la police de caractères monospace (en 22 pixels car c’est beaucoup plus lisible et agréable à utiliser), ensuite elle crée un dossier \emph{.shelladv} dans le dossier personnel de l’utilisateur. (Exemple: \emph{/home/dalcjor/.shelladv} )
+\section{game.mechanics.term.Term}
+La classe \emph{Term} permet de créer des surfaces d'interaction tel que ligne de commande POSIX et entrée utilisateur (= input), une fois initialisée elle charge la police de caractères monospace (en 22 pixels car c’est beaucoup plus lisible et agréable à utiliser), ensuite elle crée un dossier \emph{.shelladv} dans le dossier personnel de l’utilisateur. (Exemple: \emph{/home/dalcjor/.shelladv} )
 \subsection*{Attributs}
 \begin{itemize}
   \item \mintinline{python3}{surface : pygame.Surface}		$\rightarrow$ Surface principale du terminal.
-  \item \mintinline{python3}{mono : pygame.font.Font}		$\rightarrow$ Police de caractère monospace.
+  \item \mintinline{python3}{mono : pygame.font.Font}		$\rightarrow$ Police de caractères monospace.
   \item \mintinline{python3}{visualLine : List[str]}		$\rightarrow$ Lignes visibles sur la surface du terminal (Résultats de commandes ou entrées de l'utilisateur).
   \item \mintinline{python3}{lineRect : pygame.Rect}		$\rightarrow$ Rectangle de collision de l’entrée utilisateur.
   \item \mintinline{python3}{blinkRect : pygame.Rect}		$\rightarrow$ Rectangle de collision avec le rectangle clignotant (= Blink).
@@ -90,19 +90,19 @@ La classe \emph{Term} permet de créer des surfaces d'interaction tel que ligne 
   \item \mintinline{python3}{inInput : bool}			$\rightarrow$ Permet de savoir si l’utilisateur est en train d'entrer du texte.
   \item \mintinline{python3}{promptVisual: bool}			$\rightarrow$ Permet de savoir si le terminal doit afficher le prompt.
   \item \mintinline{python3}{bash: bool}				$\rightarrow$ Permet de savoir si le terminal doit exécuter les commandes entrées par l'utilisateur ou pas.
-  \item \mintinline{python3}{currentTyping : str}		$\rightarrow$ Stock la dernière entrée utilisateur
+  \item \mintinline{python3}{currentTyping : str}		$\rightarrow$ Stocke la dernière entrée utilisateur
   \item \mintinline{python3}{blinkX : int}			$\rightarrow$ Position x du rectangle clignotant à côté du prompt (=Blink).
-  \item \mintinline{python3}{custom : str}			$\rightarrow$ Stock les décorateur terminal (=prompt) customisés.
+  \item \mintinline{python3}{custom : str}			$\rightarrow$ Stocke les décorateurs terminal (=prompt) customisés.
   \item \mintinline{python3}{history : mechanics.term.History}	$\rightarrow$ objet qui gère l'historique du terminal.
   \item \mintinline{python3}{env : Dict[str, str]}		$\rightarrow$ Variables d'environnements semblables à celles présentes dans les systèmes UNIX (Linux, MacOS) et NT (Windows).
-  \item \mintinline{python3}{prompt: str}		$\rightarrow$ Permet de prendre connaissance du nom d’utilisateur, nom de la machine et le CWD (Current Work Directory, = Dossier de travail courrant).
+  \item \mintinline{python3}{prompt: str}		$\rightarrow$ Permet de prendre connaissance du nom d’utilisateur, du nom de la machine et du CWD (Current Work Directory, = Dossier de travail courrant).
   \item \mintinline{python3}{tick: float}		$\rightarrow$ Heure actuel pour permettre de réguler la vitesse du blink (le rectangle à côté du prompt).
 \end{itemize}
 
 \subsection*{Méthodes}
 \begin{itemize}
   \item \mintinline{python3}{resize(size: Tuple[int, int])}		$\rightarrow$ Change la taille de la surface du terminal.
-  \item \mintinline{python3}{disable_prompt()}		$\rightarrow$  cache le le decorateur (=prompt).
+  \item \mintinline{python3}{disable_prompt()}		$\rightarrow$  cache le le décorateur (=prompt).
   \item \mintinline{python3}{enable_prompt()}		$\rightarrow$ Ré-affiche le décorateur (=prompt).
   \item \mintinline{python3}{isprompt_enabled() : bool}		$\rightarrow$ Retourne \mintinline{python3}{True} si le décorateur (=prompt) est affiché.
   \item \mintinline{python3}{disable_bash()}		$\rightarrow$ Désactive l'exécution des entrées de l'utilisateur.
@@ -115,15 +115,15 @@ La classe \emph{Term} permet de créer des surfaces d'interaction tel que ligne 
   \item \mintinline{python3}{get_env(): Dict[str, str]}		$\rightarrow$ Retourne les variables d'environnements.
   \item \mintinline{python3}{draw()}	$\rightarrow$ Permet de dessiner les lignes de commandes entrées par l’utilisateur.
   \item \mintinline{python3}{drawBlink()}		$\rightarrow$ Dessine le rectangle qui clignote à côté du décorateur (=prompt) et de l'entrée utilisateur.
-  \item \mintinline{python3}{keydown()}		$\rightarrow$ Méthode de traitement des touches pressées, pour ensuite les affichéer dans le terminal.
+  \item \mintinline{python3}{keydown()}		$\rightarrow$ Méthode de traitement des touches pressées, puis ensuite les affiches dans le terminal.
   \item \mintinline{python3}{update()}		$\rightarrow$  Méthode qui gère le curseur et appelle la méthode \mintinline{python3}{draw}
   \item \mintinline{python3}{get_surface(): pygame.Surface()}		$\rightarrow$ Actualise et retourne l'écran (=surface) du terminal.
 \end{itemize}
 \newpage
 
-\subsection{game.mechanics.term.History}
+\section{game.mechanics.term.History}
 Comme dans tout bon terminal POSIX, il y a un gestionnaire d’historique, cela permet de rechercher des commandes déjà tapées.
-Les historiques sont sauvegardé de façon à ce que l'utilisateur puisse retrouver ces commandes de jeu qu'il a précedemment entré.
+Les historiques sont sauvegardés de façon à ce que l'utilisateur puisse retrouver ses commandes de jeu qu'il a précédemment entrées.
 
 \subsection*{Attributs}
 
@@ -138,15 +138,15 @@ Les historiques sont sauvegardé de façon à ce que l'utilisateur puisse retrou
 \item \mintinline{python3}{append(line: str)}	$\rightarrow$  ajoute une ligne à l’historique.
 \item \mintinline{python3}{openFile()}	$\rightarrow$ Ouvre le fichier d’historique.
 \item \mintinline{python3}{get_size() : int}	$\rightarrow$ Retourne le nombre de commande présent dans l'historique.
-\item \mintinline{python3}{get_previous() : str}	$\rightarrow$ Retourne la commande qui a été précedemment introduite.
-\item \mintinline{python3}{get_next()}	$\rightarrow$ Retourne la commande qui suis la dernière retournée.
+\item \mintinline{python3}{get_previous() : str}	$\rightarrow$ Retourne la commande qui a été précédemment introduite.
+\item \mintinline{python3}{get_next()}	$\rightarrow$ Retourne la commande qui suit la dernière retournée.
 
 \end{itemize}
 
 \newpage
 
-\subsection{game.mechanics.rpg.Rpg.Rpg}
-La classe \mintinline{python3}{Rpg} permet d’afficher les éléments visuels, que se soit personnages ou objets.
+\section{game.mechanics.rpg.Rpg.Rpg}
+La classe \mintinline{python3}{Rpg} permet d’afficher les éléments visuels, qu'ils soient personnages ou objets.
 
 \subsection*{Attributs}
 \begin{itemize}
@@ -159,18 +159,40 @@ La classe \mintinline{python3}{Rpg} permet d’afficher les éléments visuels, 
 \begin{itemize}
   \item \mintinline{python3}{add_to_surface(name: str, sprite: game.mechanics.rpg.sprite.Sprite)}	$\rightarrow$ Permet d’ajouter un sprite à l’écran.
 
-  \item \mintinline{python3}{clear()} $\rightarrow$ Efface complétement la surface RPG.
+  \item \mintinline{python3}{clear()} $\rightarrow$ Efface complètement la surface RPG.
 
   \item \mintinline{python3}{set_mouse_collide(collide: bool)} $\rightarrow$ Informe la classe RPG que la souris passe dessus.
 
-  \item \mintinline{python3}{keydown(key: int)} $\rightarrow$ Transmet les entrées clavier de l'utilisateur au différent Sprite (= personnage, objet).
+  \item \mintinline{python3}{keydown(key: int)} $\rightarrow$ Transmet les entrées clavier de l'utilisateur au différent sprites (= personnage, objet).
 
   \item \mintinline{python3}{update()}	$\rightarrow$  Actualise la surface et applique les sprites à la surface.
   \item \mintinline{python3}{resize(size: Tuple[int, int])}	$\rightarrow$ Change la taille de la surface.
 \end{itemize}
 \newpage
 
-\subsection {game.mechanics.rpg.sprite.Sprite}
+\section{game.mechanics.rpg.dialog.Dialog}
+Cette classe permet de gérer les boites de dialogue des personnages / objets
+\subsection*{Attributs}
+\begin{itemize}
+  \item \mintinline{python3}{font: pygame.font.Font} $\rightarrow$ Police de caractères qui gère les dialogues, par défault Monospace, mais il y a moyen de transmettre une autre police de caractères par le constructeur (argument font)
+  \item \mintinline{python3}{surface: pygame.Surface} $\rightarrow$ Surface du dialogue
+
+  \item \mintinline{python3}{haveToContinue: bool} $\rightarrow$ Permet d'afficher une petite flèche qui signale qu'une boite de dialogue va suivre.
+
+  \item \mintinline{python3}{txt: str} $\rightarrow$ Contient le texte à afficher
+  \item \mintinline{python3}{screenHeight: int} $\rightarrow$ Longueur de l'écran
+  \item \mintinline{python3}{img} $\rightarrow$ Image qui montre le personnage qui parle.
+\end{itemize}
+
+\subsection*{Méthodes}
+\begin{itemize}
+  \item \mintinline{python3}{update()} $\rightarrow$ Redessine la boite de dialogue
+  \item \mintinline{python3}{get_surface() : python.Surface} $\rightarrow$ retourne la surface de la boite de dialogue
+  \item \mintinline{python3}{get_pos(): Tuple[int, int]} $\rightarrow$ Permet de retourner la position de la boite de dialogue
+  \item \mintinline{python3}{keydown(keydown: int)} $\rightarrow$ Vérifie si le joueur a bien appuyer sur la toucher Enter pour enlever le dialogue en cours
+\end{itemize}
+\newpage
+\section {game.mechanics.rpg.sprite.Sprite}
 Cette classe permet de gérer les spritesheets (=Image qui compose les mouvements des personnages, objet) automatiquement, grâce au \emph{Adventure Script}, il est possible de gérer des spritesheets avec 4 actions dans cette ordre précis: Pars vers le haut, pars à Droite, pars à Gauche,  pars vers le bas. Le premier sprite doit être celui par défaut (au repos). Par contre vous pouvez mettre autant de frames à une action (= étape par action) que vous voulez. Toutes les configurations nécessaires sont faites via \emph{Adventure Script}.
 
 \begin{figure}[hb!]
@@ -191,8 +213,8 @@ Cette classe permet de gérer les spritesheets (=Image qui compose les mouvement
   \end{itemize}
 \subsection*{Méthodes}
 \begin{itemize}
-  \item \mintinline{python3}{get_pos() : Tuple[int, int] }		$\rightarrow$ Retourne la position du sprite (=personnage, objet) sur la Surface dédié au RPG.
-  \item \mintinline{python3}{get_surface(): pygame.Surface}		$\rightarrow$ redessine le sprite (=personnage, objet) et retourne sa surface.
+  \item \mintinline{python3}{get_pos() : Tuple[int, int] }		$\rightarrow$ Retourne la position du sprite (=personnage, objet) sur la surface dédiée au RPG.
+  \item \mintinline{python3}{get_surface(): pygame.Surface}		$\rightarrow$ Redessine le sprite (=personnage, objet) et retourne sa surface.
   \item \mintinline{python3}{reset(index: int)}		$\rightarrow$ Met le sprite (=personnage, objet) à une position repos en fonction de sa direction, s’il est à sa dernière frame ou s’il change de direction.
   \item \mintinline{python3}{move(self, way: int)}		$\rightarrow$ Fait passer le sprite à sa frame suivante.
   \item \mintinline{python3}{stop(way: int)}		$\rightarrow$ Met le sprite en repos, car il a fini de se déplacer.
@@ -204,42 +226,87 @@ Cette classe permet de gérer les spritesheets (=Image qui compose les mouvement
   \caption{Exemple de quêtes}
   \label{fig:spritesheet}
 \end{figure}
-\subsection{game.mechanics.quest.Quest.Quest}
-Cette classe permet de gérer les quêtes grâce ) à l'Adventure Script Il est important de noter que le jeu est limité à 18 quêtes à la fois.
+\section{game.mechanics.quest.Quest.Quest}
+Cette classe permet de gérer les quêtes grâce à l'Adventure Script. Il est important de noter que le jeu est limité à 18 quêtes à la simultanées.
 
 \subsection*{Attributs}
 \begin{itemize}
   \item \mintinline{python3}{surface: pygame.Surface} $\rightarrow$ Surface qui permet d'afficher les quêtes.
   \item \mintinline{python3}{mono: pygame.font.Font} $\rightarrow$ Oui, encore la police monospace, elle permet d'écrire les quêtes.
-  \item \mintinline{python3}{quests: Dict[str, str]} $\rightarrow$ Attributs qui stock les quêtes en associant un nom de quêtes (définit dans un script coder en Adventure Script).
+  \item \mintinline{python3}{quests: Dict[str, str]} $\rightarrow$ Attributs qui stocke les quêtes en associant un nom de quête (défini dans un script coder en Adventure Script).
 \end{itemize}
 
 \subsection*{Méthodes}
 \begin{itemize}
   \item \mintinline{python3}{resize(size: Tuple[int, int])} $\rightarrow$ permet de changer la taille de la surface des quêtes.
-  \item \mintinline{python3}{add(var: str, event: str)} $\rightarrow$ Ajoute une quêtes et la place dans la variable \mintinline{python3}{quests} en plaçant \mintinline{python3}{var} comme clé et \mintinline{python3}{event} comme valeur.
-  \item \mintinline{python3}{done(questVar: str)} $\rightarrow$ Notifie qu'une quêtes est bel et bien terminé.
-  \item \mintinline{python3}{clear()} $\rightarrow$ efface les quêtes
+  \item \mintinline{python3}{add(var: str, event: str)} $\rightarrow$ Ajoute une quête et la place dans la variable \mintinline{python3}{quests} en plaçant \mintinline{python3}{var} comme clé et \mintinline{python3}{event} comme valeur.
+  \item \mintinline{python3}{done(questVar: str)} $\rightarrow$ Notifie qu'une quête est bel et bien terminée.
+  \item \mintinline{python3}{clear()} $\rightarrow$ efface les quêtes.
   \item \mintinline{python3}{update()} $\rightarrow$ met à jour la surface des quêtes.
   \item \mintinline{python3}{get_surface()} $\rightarrow$ retourne la surface de quête.
  \end{itemize}
+\newpage
+\section{game.lang.Interpreter}
+Il s'agit du coeur même du langage Adventure Script. Avec l'aide du Lexer (partie du code qui crée les mots clé) et le Parser (partie du code qui définit la grammaire), il transforme le code défini par l'utilisateur en code compréhensible pour l'interpréteur Python.
 
-\subsection{Programme principale}
-Ici selons moi, le programme principale ne se trouve pas dans le fichier tfe.py (qui est juste un simple lanceur), mais plutôt dans le fichier game/game.py. Voici en quelques mots toutes les choses mise en place au démarrage de l'application.
+\subsection*{Attributs}
+\begin{itemize}
+  \item \mintinline{python3}{gameDir: str} $\rightarrow$ Contient le chemain vers le dossier du jeu
+  \item \mintinline{python3}{term: game.mechanics.term.Term} $\rightarrow$ Notre terminal (expliqué précédemment)
+  \item \mintinline{python3}{quest: game.mechanics.quest.Quest} $\rightarrow$ Nos quêtes (expliqué précédemment)
+  \item \mintinline{python3}{rpg: game.mechanics.rpg.Rpg} $\rightarrow$ Le RPG (expliqué précdémment)
+
+  \item \mintinline{python3}{lexer: game.lang.Lexer} Objet qui reprend les mots-clés du langage grâce aux regex. (= sly.Lexer)
+  \item \mintinline{python3}{parser: game.lang.Parser} Objet qui crée la grammaire du langage. (=sly.Parser)
+  \item \mintinline{python3}{codeTree: list} $\rightarrow$ Liste des instructions représentées en groupements de mots-clés simple à traiter
+
+  \item \mintinline{python3}{mainPath: str} $\rightarrow$ Reprend un dossier défini par l'utilisateur du langage là où il veut charger des sprites (=personnage, objet)
+  \item \mintinline{python3}{string: Tuple[int, str, float]} $\rightarrow$ Permet de faire une petite annimation avec le texte (imitant quelqu'un qui tape sur un clavier) à vitesse et texte définis dans un script. Le premier composant est un nombre entier qui représente l'heure et la date du système, la chaîne de caractères est le texte à afficher et le nombre flottant représente le temps à attendre par caractères.
+  \item \mintinline{python3}{timing: int} variable qui permet de faire attendre le jeu (instruction WAIT)
+  \item \mintinline{python3}{typeBuffer} $\rightarrow$ Reprend les lettres à afficher dans l'animation de dactylographie.
+  \item \mintinline{python3}{buffer : dict} $\rightarrow$ Dictionnaire complexe qui reprend les fichiers et dossiers à attendre (supression ou création), lié à une fonction pour vérifier leur existence ou non. Lie le nom du fichier / dossier à des instructions Adventure Script.
+  \item \mintinline{python3}{dialog_buffer: List[game.mechanics.rpg.dialog.Dialog]} $\rightarrow$ Liste qui contient les dialogues pas encore affichés.
+  \item \mintinline{python3}{spriteMove: list} $\rightarrow$ Gère les déplacements des sprites (=personnage, objet)
+  \item \mintinline{python3}{sprites: Dict[str, game.mechanics.rpg.sprites.Sprite]} $\rightarrow$ Contient les sprites disponible sur l'écran et les lie à un nom afin de mieux les contrôler dans le langage.
+  \item \mintinline{python3}{pos: Dict[str, Tuple[int, int]]} $\rightarrow$ Contient les positions (à transmettre) des différentes parties du jeu (term, quest, rpg)
+  \item \mintinline{python3}{backPos: Dict[str, Tuple[int, int]]} $\rightarrow$ Contient les dispositions d'origine des différentes partie du jeu (term, quest, rpg)
+\end{itemize}
+\subsection*{Méthodes}
+
+\begin{itemize}
+  \item \mintinline{python3}{parse(line: str)} $\rightarrow$ transforme une ligne de code en Adventure Shell en langage plus compréhensible pour Python
+  \item \mintinline{python3}{parse_string(string: str)} $\rightarrow$ Place les variables dans la chaîne de caractères (il faut mettre un \$ devant)
+  \item \mintinline{python3}{evaluate(code: list)} $\rightarrow$ Exécute les instructions données de l'utilisateur, traduites grâce au parser
+  \item \mintinline{python3}{execute(filename: str)} $\rightarrow$ Lit un fichier de script ligne par ligne et transmet les lignes au parser
+  \item \mintinline{python3}{mainloop()} $\rightarrow$ Vérifie les conditions du langage, vérifie si l'utilisateur passe d'un dialogue à l'autre, si un personnage, ou objet se déplace, gère les animations de dactylographie, répartit l'exécution et transmet les entrées utilisateurs au programme.
+\end{itemize}
+
+\newpage \section{Programme principale}
+Ici selon moi, le programme principale ne se trouve pas dans le fichier tfe.py (qui est juste un simple lanceur), mais plutôt dans le fichier game/game.py. Voici en quelques mots toutes les choses mises en place au démarrage de l'application.
 
 \begin{itemize}
   \item Initialisation du moteur pygame, création de la fenêtre principale, initialisation de l'horloge interne à l'application.
   \item Initialisation des différentes parties du moteur (terminal, quête et rpg).
-  \item Appel et transfer des parties du moteur (terminal, quête, rpg) à l'interpréteur Adventure Shell et execute un script (peux varier selons la modification de l'utilisateur).
-  \item répartis les évennement (clavier et souris) entre chaque parties du jeu.
+  \item Appel et transfert des parties du moteur (terminal, quête, rpg) à l'interpréteur Adventure Shell et exécute un script (peut varier selons la modification de l'utilisateur).
+  \item répartit les évenements (clavier et souris) entre chaque parties du jeu.
 \end{itemize}
+
+\section{Quelques fonctions importantes}
+\begin{itemize}
+    \item \mintinline{python3}{hex_convert(hexColor: str) : Tuple[int, int, int]} $\rightarrow$ Convertit une couleur hexadecimale en valeur RGB
+    \item \mintinline{python3}{execute(cmd: str, term: object) : str} $\rightarrow$ fonction qui exécute les commandes bash entrées par l'utilisateur
+
+\end{itemize}
+
 
 \part{Conclusions et Sources}
 \section{Problèmes rencontré}
-Heureusement pour moi, j'ai pas réellement rencontré de problème majeur à l'exception d'un problème mineur avec le curseur du terminal (=blink), régler grâce aux bon conseils de Monsieur Carrera (Merci :) ).
+Heureusement pour moi, je n'ai pas réellement rencontré de problème majeur au niveau du code, juste d'un problème mineur avec le curseur du terminal (=blink), rapidement réglé grâce aux bons conseils de Monsieur Carrera (Merci :) ).
+
+Par contre au niveau du rapport, mon orthographe a été l'une de mes grandes difficultées.
 
 \section{Pour conclure...}
-Mon application répond à mon idée de base, et même va légerement plus loin que mes espérences. J'ai réussi mon défi de créer un langage de Script. Par contre j'ai pas eu le temps de faire un petit niveau, par contre une petite démo des possibilitées du moteur serait peut-être disponible à la présentation (croisons les doigts).
+Mon application correspond à mon idée de base, et va même légèrement plus loin que mes espérances. J'ai réussi mon défi de créer un langage de Script. Par contre je n'ai pas eu le temps de faire un petit niveau, ce pendant, une petite démo des possibilitées du moteur sera peut-être disponible à la présentation (croisons les doigts).
 
 \chapter{Sources}
 \section*{Documentation de Python3}

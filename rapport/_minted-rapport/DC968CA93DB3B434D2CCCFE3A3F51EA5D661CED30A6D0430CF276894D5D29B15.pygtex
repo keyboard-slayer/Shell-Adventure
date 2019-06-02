@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{parser}\PYG{p}{:} \PYG{n}{game}\PYG{o}{.}\PYG{n}{lang}\PYG{o}{.}\PYG{n}{Parser}
+\end{Verbatim}

@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{sprites}\PYG{p}{:} \PYG{n}{Dict}\PYG{p}{[}\PYG{n+nb}{str}\PYG{p}{,} \PYG{n}{game}\PYG{o}{.}\PYG{n}{mechanics}\PYG{o}{.}\PYG{n}{rpg}\PYG{o}{.}\PYG{n}{sprites}\PYG{o}{.}\PYG{n}{Sprite}\PYG{p}{]}
+\end{Verbatim}
