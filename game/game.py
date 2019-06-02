@@ -21,9 +21,9 @@ def launch_game():
     display = pygame.display.set_mode((1920, 1080))
     pygame.display.set_caption("Shell Adventure")
 
-    term = Term("test-user", "localhost", (500, 540), font=mono)
-    quest = Quest((500, 540), font=mono)
-    rpg = Rpg((1420, 1080))
+    term = Term("test-user", "localhost", (600, 540), font=mono)
+    quest = Quest((600, 540), font=mono)
+    rpg = Rpg((1320, 1080))
 
     lang = Interpreter(GAMEFILES, term, quest, rpg)
     # os.chdir(term.getenv()["HOME"])

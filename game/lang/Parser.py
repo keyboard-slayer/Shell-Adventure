@@ -34,6 +34,10 @@ class SAdvParser(Parser):
     def statement(self, p):
         return ('PYTHON', f'self.term.add_to_display(self.parse_string(\"{p.STRING}\"))')
 
+    @_('CHECK COPY STRING STRING ELSE statement')
+    def statement(self, p):
+        return ('CHECK', p.STRING0, p.STRING1, p.statement)
+
     @_('SAY NAME')  # DONE
     def statement(self, p):
         return ('PYTHON', f'self.term.add_to_display(globals()[\"{p.NAME}\"])')
@@ -45,7 +49,7 @@ class SAdvParser(Parser):
 
     @_('DONE NAME')  # TESTED TODO
     def statement(self, p):
-        return ('PYTHON', f'self.quest.done(\"{p.NAME}\")')
+        return ('QUEST', p.NAME)
 
     @_('WAIT FILE STRING THEN statement')  # DONE
     def statement(self, p):

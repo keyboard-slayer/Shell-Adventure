@@ -46,7 +46,7 @@ def execute(cmd: str, term: object) -> str:
                 pwd = term.get_env()["PWD"].split('/')
                 directory = cmdWArg[1].split('/')
                 if not directory[0]:
-                    return "Le chemain absolu sont interdit :p"
+                    return "Les chemains absolus sont interdit :p"
 
                 for dir in directory:
                     if dir == "..":
@@ -69,10 +69,13 @@ def execute(cmd: str, term: object) -> str:
 
             else:
                 try:
-                    out = subprocess.Popen(
-                        filter(None, cmdWArg),
+                    proc = subprocess.Popen(
+                        ["/bin/bash"],
+                        stdin=subprocess.PIPE,
                         stdout=subprocess.PIPE,
-                        stderr=subprocess.PIPE).communicate()
+                        stderr=subprocess.PIPE)
+
+                    out = proc.communicate(' '.join(cmdWArg).encode())
 
                     output = out[1].decode("utf-8") if out[1] else out[0].decode("utf-8")
 

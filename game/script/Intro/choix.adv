@@ -1,0 +1,55 @@
+FUN showui
+  ENABLE RPG
+  ENABLE QUEST
+  ENABLE TERM
+  ENABLE BASH
+END FUN
+
+FUN cheatclone
+  DISABLE TERM
+  SETSIZE RPG 1920 1080
+  CLEAR QUEST
+  CLEAR TERM
+  DIALOG "dialog-sci.png" #3cff00 "Ooh il me semble que tu n'as pas fait une copie ... " TRUE
+  DIALOG "dialog-sci.png" #3cff00 "Ok, nous allons recommencer !" FALSE
+  WAIT END DIALOG THEN CALL LOADSCRIPT "Intro/choix.adv"
+END FUN
+
+FUN nextclone
+  CHECK COPY "sci" "sci1" ELSE CALL cheatclone
+  DONE cloned
+END FUN
+
+FUN clone
+  EXEC "if [ -f 'sci*' ]; then rm sci*; fi"
+  DIALOG "dialog-sci.png" #3cff00 "Pour cloner un personnage ou un objet, tu dois utiliser la commande CP " TRUE
+  DIALOG "dialog-sci.png" #3cff00 "Allez ! essais. Tappe dans le terminal cp sci sci1", FALSE
+  WAIT END DIALOG THEN CALL showui
+  OBJECTIF cloned "Clone le professeur avec la commande cp"
+  WAIT FILE "sci1" THEN CALL nextclone
+END FUN
+
+
+FUN perso
+  SAY "perso"
+END FUN
+
+FUN tp
+  SAY "tp"
+END FUN
+
+
+CLEAR TERM
+ENABLE PROMPT
+SAY "Que veut tu faire pour commencer ?"
+SAY "1. Apprendre le clonage"
+SAY "2. Apprendre à faire apparaître des personnages"
+SAY "3. Créer une pièce et s'y téléporter"
+INPUT choix "Quelle est votre choix ?"
+
+DISABLE TERM
+SETSIZE RPG 1920 1080
+
+IF choix == "1" THEN CALL clone
+IF choix == "2" THEN CALL perso
+IF choix == "3" THEN CALL tp

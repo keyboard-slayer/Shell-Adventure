@@ -56,12 +56,20 @@ class SAdvLexer(Lexer):
         OUTPUT,
         RESET,
         IF,
-        EQ
+        EQ,
+        COPY,
+        CHECK,
+        ELSE
     }
 
     ignore = '\n'
 
     GO = r'(?i)GO'
+
+    COPY = r'(?i)COPY'
+    CHECK = r'(?i)CHECK'
+    ELSE = r'(?i)ELSE'
+    
     POS = r'(?i)(LEFT|RIGHT|UP|DOWN)'
     BOOL = r'(?i)(TRUE|FALSE)'
     SPEED = r'(?i)(RUN|WALK)'
