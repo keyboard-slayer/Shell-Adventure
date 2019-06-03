@@ -92,12 +92,7 @@ class Interpreter:
             sum2 = subprocess.check_output(["md5sum", code[2]]).decode('utf-8').split(' ')[0]
             print(sum1, sum2)
             if sum1 != sum2:
-                codeTree = code[3]
-                print(f"DEBUG: \n {code[3]}")
-                input()
-            else:
-                print("OK")
-                input()
+                self.codeTree += code[3]
 
         if code[0] == "INPUT":
             if len(code) == 3:

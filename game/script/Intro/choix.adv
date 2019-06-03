@@ -12,12 +12,22 @@ FUN cheatclone
   CLEAR TERM
   DIALOG "dialog-sci.png" #3cff00 "Ooh il me semble que tu n'as pas fait une copie ... " TRUE
   DIALOG "dialog-sci.png" #3cff00 "Ok, nous allons recommencer !" FALSE
-  WAIT END DIALOG THEN CALL LOADSCRIPT "Intro/choix.adv"
 END FUN
+
+FUN delete_it
+  DIALOG "dialog-sci.png" #3cff00 "Ce monde n'a besoin que d'un seul bon scientifique ! " TRUE
+  DIALOG "dialog-sci.png" #3cff00 "Tu pourrais le supprimé pour avec la commande rm (rm sci1) " FALSE
+  WAIT DELFILE "sci1" THEN SAY "ok"
+END FUN
+
 
 FUN nextclone
   CHECK COPY "sci" "sci1" ELSE CALL cheatclone
   DONE cloned
+  LOADSPRITE sci1 "scientist.png" 960 540 21 27 0 3 #3cff00 60 60
+  GO DOWN sci1 1 WALK
+  DIALOG "dialog-sci.png" #3cff00 "BEEP BEEP, Je suis un Clone " FALSE
+  WAIT END DIALOG THEN CALL delete_it
 END FUN
 
 FUN clone

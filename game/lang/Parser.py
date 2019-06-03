@@ -135,6 +135,7 @@ class SAdvParser(Parser):
             raise SyntaxError()
         else:
             self.func = ""
+        
 
     @_('END LOOP')  # TODO Google docs
     def statement(self, p):
