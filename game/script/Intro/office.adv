@@ -24,7 +24,7 @@ DISABLE QUEST
 
 SETSIZE RPG 1920 1080
 
-EXEC "if [ ! -f 'sci' ]; then 'echo "hi" > hi'; fi"
+EXEC "if [ ! -f 'sci' ]; then echo hi > sci; fi"
 
 LOADSPRITE sci "scientist.png" 960 540 21 27 0 3 #3cff00 60 60
 ; VAR - FILENAME - POSX - POSY - WIDTH - HEIGHT - INDICE SPRITE - NBR SPRITE VERTICAL - COLOR BACK - NEW WIDTH - NEW HEIGHT

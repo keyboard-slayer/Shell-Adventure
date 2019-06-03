@@ -21,7 +21,7 @@ FUN nextclone
 END FUN
 
 FUN clone
-  EXEC "if [ -f 'sci*' ]; then rm sci*; fi"
+  EXEC "if [ -f 'sci1' ]; then rm sci1; fi"
   DIALOG "dialog-sci.png" #3cff00 "Pour cloner un personnage ou un objet, tu dois utiliser la commande CP " TRUE
   DIALOG "dialog-sci.png" #3cff00 "Allez ! essais. Tappe dans le terminal cp sci sci1", FALSE
   WAIT END DIALOG THEN CALL showui
