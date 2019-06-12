@@ -135,7 +135,6 @@ class SAdvParser(Parser):
             raise SyntaxError()
         else:
             self.func = ""
-        
 
     @_('END LOOP')  # TODO Google docs
     def statement(self, p):
@@ -227,6 +226,13 @@ class SAdvParser(Parser):
             p.NUM6,
             p.NUM7
         )
+
+    @_('REMOVE NAME')
+    def statement(self, p):
+        return (
+                "PYTHON",
+                f"self.rpg.remove('{p.NAME}')"
+               )
 
     @_('GO POS NAME NUM SPEED')  # TOFIX
     def statement(self, p):

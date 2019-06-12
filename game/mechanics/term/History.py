@@ -3,6 +3,7 @@
 
 import os
 
+
 class History:
     def __init__(self, path: str):
         self.path = os.path.join(path, ".bash_history")

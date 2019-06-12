@@ -11,6 +11,7 @@ import os
 import datetime
 import subprocess
 
+
 def hex_convert(hexColor: str) -> Tuple[int, int, int]:
     hexColor = hexColor[1:]
     decimalColor = []
@@ -161,7 +162,6 @@ class Interpreter:
             if globals()[code[1]] == code[2]:
                 self.codeTree += code[3]
 
-
         if code[0] == "DIALOG":
             spriteFolder = os.path.join(self.mainPath, "sprite")
             sprite = os.path.join(spriteFolder, code[1])
@@ -201,7 +201,6 @@ class Interpreter:
                             self.evaluate(line)
                     del self.buffer[key][0][tofind[0]]
 
-
         if self.dialog_buffer:
             if "dialog" not in self.rpg.in_surface():
                 self.rpg.add_to_surface("dialog", self.dialog_buffer[0])
@@ -230,7 +229,6 @@ class Interpreter:
             self.term.add_to_display(self.typeBuffer)
 
         if self.codeTree:
-            #print(self.codeTree)
             if self.evaluated:
                 if type(self.codeTree[0]) == tuple:
                     self.evaluate(self.codeTree[0])

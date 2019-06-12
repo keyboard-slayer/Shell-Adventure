@@ -22,6 +22,8 @@ class Rpg:
     def in_surface(self) -> Dict[str, object]:
         return self.sprites
 
+    def remove(self, name: str):
+        del self.sprites[name]
 
     def set_mouse_collide(self, collide: bool):
         self.mouseCollide = collide

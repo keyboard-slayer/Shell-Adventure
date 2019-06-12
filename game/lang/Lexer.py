@@ -7,6 +7,7 @@ from sly import Lexer
 class SAdvLexer(Lexer):
     tokens = {
         COMMENT,
+        REMOVE,
         SAY,
         OBJECTIF,
         WAIT,
@@ -69,7 +70,7 @@ class SAdvLexer(Lexer):
     COPY = r'(?i)COPY'
     CHECK = r'(?i)CHECK'
     ELSE = r'(?i)ELSE'
-    
+    REMOVE = r'(?i)REMOVE'
     POS = r'(?i)(LEFT|RIGHT|UP|DOWN)'
     BOOL = r'(?i)(TRUE|FALSE)'
     SPEED = r'(?i)(RUN|WALK)'
@@ -119,8 +120,6 @@ class SAdvLexer(Lexer):
     NUM = r'\d{1,10}'
     SPACE = r'  '
     OUTPUT = r'(?i)OUTPUT'
-
-
     ignore_newline = r'\n'
 
     @_(r';.*')

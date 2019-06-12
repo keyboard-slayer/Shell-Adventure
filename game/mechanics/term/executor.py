@@ -93,7 +93,7 @@ def execute_and_out(cmd: str, term: object):
             term.add_to_display(out)
 
 
-def file_and_out(filename: str, term:object):
+def file_and_out(filename: str, term: object):
     with open(filename, 'r') as bash:
         writeBuffer = []
         cat = False

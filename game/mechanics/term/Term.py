@@ -122,7 +122,7 @@ class Term:
 
     def draw(self):
         if len(self.visualLine) * 22 >= self.surface.get_size()[1] - 75:
-                self.visualLine = self.visualLine[1:]
+            self.visualLine = self.visualLine[1:]
 
         for lineIndex, line in enumerate(self.visualLine):
             toshow = line[1][1:] if len(line[1]) > 1 and line[1][0] == '>' else f"{line[0]} {line[1]}"
@@ -148,12 +148,7 @@ class Term:
 
         )
 
-
-        #if self.lineRect.x+self.lineRect.width > self.surface.get_width() - 10:
-        #    print(True)
-
     def keydown(self, keycode: int):
-
         if self.mouseCollide:
             keyName = pygame.key.name(keycode)
         else:
@@ -173,16 +168,16 @@ class Term:
             self.blinkX = 0
 
         if keyName == "<" and pygame.key.get_mods() & pygame.KMOD_SHIFT:
-                self.currentTyping += '>'
+            self.currentTyping += '>'
 
         elif keyName == "&" and pygame.key.get_mods() & pygame.KMOD_MODE:
             self.currentTyping += '|'
 
         elif keyName == "[.]" or keyName == ';' and pygame.key.get_mods() & pygame.KMOD_SHIFT:
-                self.currentTyping += '.'
+            self.currentTyping += '.'
 
         elif keyName == "[/]" or keyName == ':' and pygame.key.get_mods() & pygame.KMOD_SHIFT:
-                self.currentTyping += '/'
+            self.currentTyping += '/'
 
         elif keyName == "-" and pygame.key.get_mods() & pygame.KMOD_SHIFT:
             self.currentTyping += '_'
