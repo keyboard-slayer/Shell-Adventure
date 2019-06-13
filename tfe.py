@@ -26,8 +26,9 @@ def dev_menu():
 
 
 if __name__ == "__main__":
-    header = "\n".join([files for files in os.listdir("./test/")
-                        if files != "__init__.py" and files.split('.')[-1] == "py"])
+    if os.path.isdir("./text"):
+        header = "\n".join([files for files in os.listdir("./test/")
+                            if files != "__init__.py" and files.split('.')[-1] == "py"])
 
     if len(sys.argv) == 2 and sys.argv[1] == "--dev":
         dev_menu()
